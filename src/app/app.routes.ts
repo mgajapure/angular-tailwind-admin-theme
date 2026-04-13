@@ -12,25 +12,69 @@ export const routes: Routes = [
         path: 'dashboard',
         loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
         title: 'Dashboard',
-        data: { breadcrumbs: [{ label: 'Dashboard' }] }
       },
       {
         path: 'analytics',
         loadComponent: () => import('./features/analytics/analytics.component').then(m => m.AnalyticsComponent),
         title: 'Analytics',
-        data: { breadcrumbs: [{ label: 'Analytics' }] }
       },
+      // Management
       {
         path: 'users',
         loadComponent: () => import('./features/users/users.component').then(m => m.UsersComponent),
         title: 'Users',
-        data: { breadcrumbs: [{ label: 'Management' }, { label: 'Users' }] }
       },
+      {
+        path: 'products',
+        loadComponent: () => import('./features/products/products.component').then(m => m.ProductsComponent),
+        title: 'Products',
+      },
+      {
+        path: 'products/new',
+        loadComponent: () => import('./features/products/product-form.component').then(m => m.ProductFormComponent),
+        title: 'Add Product',
+      },
+      {
+        path: 'products/categories',
+        loadComponent: () => import('./features/products/product-categories.component').then(m => m.ProductCategoriesComponent),
+        title: 'Product Categories',
+      },
+      {
+        path: 'products/:id',
+        loadComponent: () => import('./features/products/product-form.component').then(m => m.ProductFormComponent),
+        title: 'Edit Product',
+      },
+      {
+        path: 'orders',
+        loadComponent: () => import('./features/orders/orders.component').then(m => m.OrdersComponent),
+        title: 'Orders',
+      },
+      {
+        path: 'reports',
+        loadComponent: () => import('./features/reports/reports.component').then(m => m.ReportsComponent),
+        title: 'Reports',
+      },
+      // Content
+      {
+        path: 'pages',
+        loadComponent: () => import('./features/pages/pages.component').then(m => m.PagesComponent),
+        title: 'Pages',
+      },
+      {
+        path: 'media',
+        loadComponent: () => import('./features/media/media.component').then(m => m.MediaComponent),
+        title: 'Media Library',
+      },
+      // System
       {
         path: 'settings',
         loadComponent: () => import('./features/settings/settings.component').then(m => m.SettingsComponent),
         title: 'Settings',
-        data: { breadcrumbs: [{ label: 'Settings' }] }
+      },
+      {
+        path: 'help',
+        loadComponent: () => import('./features/help/help.component').then(m => m.HelpComponent),
+        title: 'Help & Docs',
       },
     ]
   },
