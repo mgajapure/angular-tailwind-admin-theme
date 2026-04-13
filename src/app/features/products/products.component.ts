@@ -2,11 +2,12 @@ import {
   ChangeDetectionStrategy, Component, OnInit, computed, inject, signal
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { DecimalPipe, CurrencyPipe } from '@angular/common';
 import {
   LucidePlus, LucideSearch, LucideFilter, LucideDownload, LucideEdit2,
-  LucideTrash2, LucidePackage, LucideAlertTriangle, LucideCheckCircle, LucideXCircle, LucideChevronDown
+  LucideTrash2, LucidePackage, LucideAlertTriangle, LucideCheckCircle, LucideXCircle,
+  LucideMoreVertical, LucideEye, LucideCopy, LucideArchive,
 } from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { ToastService } from '../../core/services/toast.service';
@@ -18,6 +19,9 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { StatCardComponent } from '../../shared/components/stat-card/stat-card.component';
 import { ModalComponent } from '../../shared/components/modal/modal.component';
+import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
+import { DropdownItemComponent } from '../../shared/components/dropdown/dropdown-item.component';
+import { DropdownSeparatorComponent } from '../../shared/components/dropdown/dropdown-separator.component';
 
 interface Product {
   id: number;
@@ -42,8 +46,10 @@ interface Product {
     BadgeComponent, ButtonComponent, AvatarComponent,
     SkeletonComponent, EmptyStateComponent, PaginationComponent,
     StatCardComponent, ModalComponent,
+    DropdownComponent, DropdownItemComponent, DropdownSeparatorComponent,
     LucidePlus, LucideSearch, LucideFilter, LucideDownload, LucideEdit2,
-    LucideTrash2, LucidePackage, LucideAlertTriangle, LucideCheckCircle, LucideXCircle, LucideChevronDown,
+    LucideTrash2, LucidePackage, LucideAlertTriangle, LucideCheckCircle, LucideXCircle,
+    LucideMoreVertical, LucideEye, LucideCopy, LucideArchive,
   ],
   template: `
     <!-- Header -->
@@ -222,15 +228,46 @@ interface Product {
                       {{ product.status | titlecase }}
                     </ui-badge>
                   </td>
-                  <td class="px-4 py-3">
-                    <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <ui-button variant="ghost" size="xs" [routerLink]="['/products', product.id]">
-                        <svg lucideEdit2 [size]="12" color="currentColor" />
-                      </ui-button>
-                      <ui-button variant="ghost" size="xs" (click)="deleteProduct(product)">
-                        <svg lucideTrash2 [size]="12" color="currentColor" class="text-red-500" />
-                      </ui-button>
-                    </div>
+                  <td class="px-4 py-3 text-right">
+                    <ui-dropdown placement="bottom-end" minWidth="188px">
+
+                      <!-- Trigger: three-dot button, visible on row hover -->
+                      <button trigger type="button"
+                        class="p-1.5 rounded-[var(--radius-sm)] text-[var(--color-text-muted)]
+                               hover:text-[var(--color-text-primary)] hover:bg-[var(--color-neutral-100)]
+                               dark:hover:bg-[var(--color-bg-elevated)] transition-colors
+                               opacity-0 group-hover:opacity-100">
+                        <svg lucideMoreVertical [size]="14" color="currentColor" />
+                      </button>
+
+                      <ui-dropdown-item (click)="editProduct(product)">
+                        <svg lucideEdit2 [size]="14" color="currentColor" />
+                        Edit
+                      </ui-dropdown-item>
+                      <ui-dropdown-item (click)="viewProduct(product)">
+                        <svg lucideEye [size]="14" color="currentColor" />
+                        View Details
+                      </ui-dropdown-item>
+                      <ui-dropdown-item (click)="duplicateProduct(product)">
+                        <svg lucideCopy [size]="14" color="currentColor" />
+                        Duplicate
+                      </ui-dropdown-item>
+
+                      <ui-dropdown-separator />
+
+                      <ui-dropdown-item (click)="archiveProduct(product)" [disabled]="product.status === 'archived'">
+                        <svg lucideArchive [size]="14" color="currentColor" />
+                        Archive
+                      </ui-dropdown-item>
+
+                      <ui-dropdown-separator />
+
+                      <ui-dropdown-item [danger]="true" (click)="deleteProduct(product)">
+                        <svg lucideTrash2 [size]="14" color="currentColor" />
+                        Delete
+                      </ui-dropdown-item>
+
+                    </ui-dropdown>
                   </td>
                 </tr>
               }
@@ -275,6 +312,7 @@ interface Product {
 export class ProductsComponent implements OnInit {
   private layout = inject(LayoutService);
   private toast = inject(ToastService);
+  private router = inject(Router);
 
   loading = signal(true);
   currentPage = signal(1);
@@ -374,6 +412,21 @@ export class ProductsComponent implements OnInit {
     );
     this.clearSelection();
     this.toast.success('Products updated', `${count} products set to ${status}.`);
+  }
+
+  editProduct(product: Product) { this.router.navigate(['/products', product.id]); }
+
+  viewProduct(product: Product) { this.toast.info('View product', `Opening details for ${product.name}.`); }
+
+  duplicateProduct(product: Product) {
+    const copy: Product = { ...product, id: Date.now(), name: `${product.name} (Copy)`, sku: `${product.sku}-COPY`, status: 'draft', sales: 0, revenue: 0 };
+    this.allProducts.update(p => [...p, copy]);
+    this.toast.success('Product duplicated', `"${copy.name}" created as a draft.`);
+  }
+
+  archiveProduct(product: Product) {
+    this.allProducts.update(p => p.map(x => x.id === product.id ? { ...x, status: 'archived' as const } : x));
+    this.toast.success('Product archived', `${product.name} has been archived.`);
   }
 
   deleteProduct(product: Product) { this.deleteTarget.set(product); }
