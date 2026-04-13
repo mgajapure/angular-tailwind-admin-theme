@@ -1,0 +1,155 @@
+@theme {
+  /* ── Primary Color (Indigo default — overridden by ThemeService) ── */
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+  --color-primary-900: #312e81;
+
+  /* ── Neutral Palette ── */
+  --color-neutral-50: #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+  --color-neutral-950: #020617;
+
+  /* ── Semantic Colors ── */
+  --color-success: #10b981;
+  --color-success-light: #d1fae5;
+  --color-warning: #f59e0b;
+  --color-warning-light: #fef3c7;
+  --color-error: #ef4444;
+  --color-error-light: #fee2e2;
+  --color-info: #3b82f6;
+  --color-info-light: #dbeafe;
+
+  /* ── Surface Colors ── */
+  --color-bg-base: var(--color-neutral-50);
+  --color-bg-surface: #ffffff;
+  --color-bg-elevated: #ffffff;
+  --color-bg-overlay: rgba(0, 0, 0, 0.5);
+
+  /* ── Border ── */
+  --color-border: var(--color-neutral-200);
+  --color-border-subtle: var(--color-neutral-100);
+
+  /* ── Text ── */
+  --color-text-primary: var(--color-neutral-900);
+  --color-text-secondary: #64748b;
+  --color-text-muted: #94a3b8;
+  --color-text-inverse: #ffffff;
+
+  /* ── Sidebar ── */
+  --color-sidebar-bg: #0f172a;
+  --color-sidebar-text: #94a3b8;
+  --color-sidebar-text-active: #ffffff;
+  --color-sidebar-item-active: rgba(99, 102, 241, 0.15);
+  --color-sidebar-border: rgba(255,255,255,0.06);
+
+  /* ── Breakpoints ── */
+  --breakpoint-xs: 475px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* ── Spacing & Shape ── */
+  --radius: 0.5rem;
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-lg: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 8px);
+  --radius-full: 9999px;
+
+  /* ── Shadows ── */
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-elevated: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+  --shadow-modal: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+
+  /* ── Typography ── */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', monospace;
+
+  /* ── Layout ── */
+  --sidebar-width: 240px;
+  --sidebar-mini-width: 64px;
+  --topbar-height: 64px;
+
+  /* ── Transitions ── */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+}
+
+/* ── Dark Mode ── */
+.dark {
+  --color-bg-base: #0b0f19;
+  --color-bg-surface: #111827;
+  --color-bg-elevated: #1a2235;
+  --color-border: rgba(255,255,255,0.08);
+  --color-border-subtle: rgba(255,255,255,0.04);
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-elevated: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -2px rgba(0,0,0,0.3);
+}
+
+/* ── Violet Theme ── */
+.theme-violet {
+  --color-primary-50: #f5f3ff;
+  --color-primary-100: #ede9fe;
+  --color-primary-200: #ddd6fe;
+  --color-primary-500: #8b5cf6;
+  --color-primary-600: #7c3aed;
+  --color-primary-700: #6d28d9;
+  --color-primary-900: #4c1d95;
+}
+
+/* ── Emerald Theme ── */
+.theme-emerald {
+  --color-primary-50: #ecfdf5;
+  --color-primary-100: #d1fae5;
+  --color-primary-200: #a7f3d0;
+  --color-primary-500: #10b981;
+  --color-primary-600: #059669;
+  --color-primary-700: #047857;
+  --color-primary-900: #064e3b;
+}
+
+/* ── Rose Theme ── */
+.theme-rose {
+  --color-primary-50: #fff1f2;
+  --color-primary-100: #ffe4e6;
+  --color-primary-200: #fecdd3;
+  --color-primary-500: #f43f5e;
+  --color-primary-600: #e11d48;
+  --color-primary-700: #be123c;
+  --color-primary-900: #881337;
+}
+
+/* ── Amber Theme ── */
+.theme-amber {
+  --color-primary-50: #fffbeb;
+  --color-primary-100: #fef3c7;
+  --color-primary-200: #fde68a;
+  --color-primary-500: #f59e0b;
+  --color-primary-600: #d97706;
+  --color-primary-700: #b45309;
+  --color-primary-900: #78350f;
+}
+
+/* ── Border radius presets ── */
+.radius-none { --radius: 0rem; }
+.radius-sm   { --radius: 0.25rem; }
+.radius-md   { --radius: 0.5rem; }
+.radius-lg   { --radius: 0.75rem; }
+.radius-xl   { --radius: 1rem; }

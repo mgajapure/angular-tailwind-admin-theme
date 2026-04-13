@@ -1,0 +1,91 @@
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { NgClass } from '@angular/common';
+
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline' | 'success';
+export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
+
+@Component({
+  selector: 'ui-button',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgClass],
+  template: `
+    <button
+      [ngClass]="buttonClass()"
+      [disabled]="disabled() || loading()"
+      [attr.aria-busy]="loading()"
+      [attr.aria-label]="ariaLabel()"
+      [attr.type]="type()">
+
+      @if (loading()) {
+        <svg class="animate-spin" [style.width.px]="iconSize()" [style.height.px]="iconSize()"
+             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+        </svg>
+      }
+
+      @if (!loading()) {
+        <ng-content select="[prefix]" />
+      }
+
+      <span [class.sr-only]="iconOnly()">
+        <ng-content />
+      </span>
+
+      @if (!loading()) {
+        <ng-content select="[suffix]" />
+      }
+    </button>
+  `
+})
+export class ButtonComponent {
+  variant = input<ButtonVariant>('primary');
+  size = input<ButtonSize>('md');
+  loading = input(false);
+  disabled = input(false);
+  iconOnly = input(false);
+  ariaLabel = input<string | undefined>(undefined);
+  type = input<'button' | 'submit' | 'reset'>('button');
+  fullWidth = input(false);
+
+  iconSize = computed(() => ({ xs: 12, sm: 14, md: 16, lg: 18 }[this.size()]));
+
+  buttonClass = computed(() => {
+    const base = [
+      'inline-flex items-center justify-center gap-2 font-medium transition-all duration-150',
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+      'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none',
+      'select-none cursor-pointer',
+    ];
+
+    const sizes: Record<ButtonSize, string> = {
+      xs: 'px-2.5 py-1 text-xs rounded-[var(--radius-sm)]',
+      sm: 'px-3 py-1.5 text-sm rounded-[var(--radius-sm)]',
+      md: 'px-4 py-2 text-sm rounded-[var(--radius)]',
+      lg: 'px-5 py-2.5 text-base rounded-[var(--radius)]',
+    };
+
+    const variants: Record<ButtonVariant, string> = {
+      primary: 'bg-[var(--color-primary-600)] text-white hover:bg-[var(--color-primary-700)] active:scale-[0.98] focus-visible:ring-[var(--color-primary-500)]',
+      secondary: 'bg-[var(--color-neutral-100)] text-[var(--color-text-primary)] hover:bg-[var(--color-neutral-200)] active:scale-[0.98] focus-visible:ring-[var(--color-neutral-400)] dark:bg-[var(--color-bg-elevated)] dark:hover:bg-[var(--color-neutral-700)]',
+      ghost: 'bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-text-primary)] active:scale-[0.98] focus-visible:ring-[var(--color-neutral-400)] dark:hover:bg-[var(--color-bg-elevated)]',
+      outline: 'bg-transparent border border-[var(--color-border)] text-[var(--color-text-primary)] hover:bg-[var(--color-neutral-50)] active:scale-[0.98] focus-visible:ring-[var(--color-neutral-400)] dark:hover:bg-[var(--color-bg-elevated)]',
+      danger: 'bg-red-600 text-white hover:bg-red-700 active:scale-[0.98] focus-visible:ring-red-500',
+      success: 'bg-emerald-600 text-white hover:bg-emerald-700 active:scale-[0.98] focus-visible:ring-emerald-500',
+    };
+
+    const iconOnlyPadding = this.iconOnly() ? {
+      xs: '!p-1', sm: '!p-1.5', md: '!p-2', lg: '!p-2.5'
+    }[this.size()] : '';
+
+    return [
+      ...base,
+      sizes[this.size()],
+      variants[this.variant()],
+      iconOnlyPadding,
+      this.fullWidth() ? 'w-full' : '',
+    ].filter(Boolean).join(' ');
+  });
+}

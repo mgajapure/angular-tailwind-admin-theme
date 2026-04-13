@@ -1,0 +1,39 @@
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { Breadcrumb } from '../../../core/services/layout.service';
+
+@Component({
+  selector: 'ui-breadcrumb',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterLink],
+  template: `
+    <nav aria-label="Breadcrumb">
+      <ol class="flex items-center gap-1.5 text-sm">
+        @for (crumb of items(); track crumb.label; let last = $last) {
+          <li class="flex items-center gap-1.5">
+            @if (!last) {
+              @if (crumb.route) {
+                <a [routerLink]="crumb.route"
+                   class="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors">
+                  {{ crumb.label }}
+                </a>
+              } @else {
+                <span class="text-[var(--color-text-muted)]">{{ crumb.label }}</span>
+              }
+              <svg class="text-[var(--color-text-muted)] shrink-0" width="14" height="14" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m9 18 6-6-6-6"/>
+              </svg>
+            } @else {
+              <span class="text-[var(--color-text-primary)] font-medium">{{ crumb.label }}</span>
+            }
+          </li>
+        }
+      </ol>
+    </nav>
+  `
+})
+export class BreadcrumbComponent {
+  items = input<Breadcrumb[]>([]);
+}
