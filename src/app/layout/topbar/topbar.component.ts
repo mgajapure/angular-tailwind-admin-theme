@@ -14,6 +14,7 @@ import { ConfigService } from '../../core/services/config.service';
 import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
 import { DropdownItemComponent } from '../../shared/components/dropdown/dropdown-item.component';
 import { DropdownSeparatorComponent } from '../../shared/components/dropdown/dropdown-separator.component';
+import { TooltipDirective } from '../../shared/components/tooltip/tooltip.directive';
 
 @Component({
   selector: 'app-topbar',
@@ -23,6 +24,7 @@ import { DropdownSeparatorComponent } from '../../shared/components/dropdown/dro
     RouterLink,
     AvatarComponent, BreadcrumbComponent,
     DropdownComponent, DropdownItemComponent, DropdownSeparatorComponent,
+    TooltipDirective,
     LucideMenu, LucideSearch, LucideSun, LucideMoon, LucideBell, LucideChevronDown,
     LucideUser, LucideSettings, LucideKeyboard, LucideLogOut,
   ],
@@ -35,6 +37,7 @@ import { DropdownSeparatorComponent } from '../../shared/components/dropdown/dro
       <!-- Sidebar toggle -->
       <button
         (click)="layout.toggleMini()"
+        uiTooltip="Toggle sidebar" uiTooltipPlacement="bottom"
         class="p-2 rounded-[var(--radius)] text-[var(--color-text-muted)]
                hover:text-[var(--color-text-primary)] hover:bg-[var(--color-neutral-100)]
                dark:hover:bg-[var(--color-bg-elevated)] transition-colors"
@@ -75,6 +78,7 @@ import { DropdownSeparatorComponent } from '../../shared/components/dropdown/dro
       <!-- Dark mode toggle -->
       <button
         (click)="theme.toggleDark()"
+        uiTooltip="Toggle dark mode" uiTooltipPlacement="bottom"
         class="p-2 rounded-[var(--radius)] text-[var(--color-text-muted)]
                hover:text-[var(--color-text-primary)] hover:bg-[var(--color-neutral-100)]
                dark:hover:bg-[var(--color-bg-elevated)] transition-colors"
@@ -197,6 +201,7 @@ import { DropdownSeparatorComponent } from '../../shared/components/dropdown/dro
       <!-- Settings trigger -->
       <button
         (click)="layout.openSettings()"
+        uiTooltip="Theme settings" uiTooltipPlacement="bottom"
         class="p-2 rounded-[var(--radius)] text-[var(--color-text-muted)]
                hover:text-[var(--color-text-primary)] hover:bg-[var(--color-neutral-100)]
                dark:hover:bg-[var(--color-bg-elevated)] transition-colors"
