@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-import { LucideAngularModule, TrendingUp, TrendingDown } from 'lucide-angular';
+import { LucideTrendingUp, LucideTrendingDown } from '@lucide/angular';
 
 @Component({
   selector: 'ui-stat-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DecimalPipe, LucideAngularModule.pick({ TrendingUp, TrendingDown })],
+  imports: [DecimalPipe, LucideTrendingUp, LucideTrendingDown],
   template: `
     <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)]
                 shadow-[var(--shadow-card)] p-5 hover:shadow-[var(--shadow-elevated)] transition-shadow group">
@@ -29,10 +29,10 @@ import { LucideAngularModule, TrendingUp, TrendingDown } from 'lucide-angular';
       @if (trend() !== 0) {
         <div class="flex items-center gap-1.5 mt-2">
           @if (trend() >= 0) {
-            <lucide-angular name="trending-up" [size]="14" color="currentColor" class="text-emerald-500" [strokeWidth]="2.5" />
+            <svg lucideTrendingUp [size]="14" color="currentColor" class="text-emerald-500" [strokeWidth]="2.5" />
             <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">+{{ trend() }}%</span>
           } @else {
-            <lucide-angular name="trending-down" [size]="14" color="currentColor" class="text-red-500" [strokeWidth]="2.5" />
+            <svg lucideTrendingDown [size]="14" color="currentColor" class="text-red-500" [strokeWidth]="2.5" />
             <span class="text-xs font-semibold text-red-600 dark:text-red-400">{{ trend() }}%</span>
           }
           <span class="text-xs text-[var(--color-text-muted)]">{{ trendLabel() }}</span>

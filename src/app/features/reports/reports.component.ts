@@ -1,12 +1,13 @@
 import {
   ChangeDetectionStrategy, Component, OnInit, inject, signal
 } from '@angular/core';
-import { CurrencyPipe, DecimalPipe } from '@angular/common';
+import { CurrencyPipe, DecimalPipe, TitleCasePipe } from '@angular/common';
 import {
-  LucideAngularModule, Download, FileText, TrendingUp, Users,
-  DollarSign, ShoppingCart, Clock, Calendar, RefreshCw, Eye,
-  BarChart2, PieChart, Activity, Zap, ArrowUpRight, ArrowDownRight
-} from 'lucide-angular';
+  LucideZap, LucideDownload, LucideClock, LucideEye, LucideCalendar, LucideRefreshCw, LucideFileText,
+  LucideDollarSign, LucideShoppingCart, LucideUsers, LucideTrendingUp,
+  LucideArrowUpRight, LucideArrowDownRight, LucideBarChart2, LucideActivity,
+  LucideDynamicIcon, provideLucideIcons,
+} from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { ToastService } from '../../core/services/toast.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
@@ -18,10 +19,17 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
   selector: 'app-reports',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    provideLucideIcons(
+      LucideDollarSign, LucideShoppingCart, LucideUsers, LucideTrendingUp,
+      LucideArrowUpRight, LucideArrowDownRight, LucideBarChart2, LucideActivity, LucideFileText
+    ),
+  ],
   imports: [
-    CurrencyPipe, DecimalPipe,
+    CurrencyPipe, DecimalPipe, TitleCasePipe,
     ButtonComponent, BadgeComponent, ProgressComponent, SkeletonComponent,
-    LucideAngularModule.pick({ Download, FileText, TrendingUp, Users, DollarSign, ShoppingCart, Clock, Calendar, RefreshCw, Eye, BarChart2, PieChart, Activity, Zap, ArrowUpRight, ArrowDownRight }),
+    LucideZap, LucideDownload, LucideClock, LucideEye, LucideCalendar, LucideRefreshCw, LucideFileText,
+    LucideDynamicIcon,
   ],
   template: `
     <!-- Header -->
@@ -40,7 +48,7 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
           <option>Custom range</option>
         </select>
         <ui-button variant="primary" (click)="generateReport()">
-          <lucide-angular prefix name="zap" [size]="14" color="currentColor" />
+          <svg lucideZap prefix [size]="14" color="currentColor" />
           Generate Report
         </ui-button>
       </div>
@@ -53,12 +61,12 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
           <div class="flex items-center justify-between mb-4">
             <div class="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">{{ kpi.label }}</div>
             <div class="w-8 h-8 rounded-[var(--radius)] flex items-center justify-center" [class]="kpi.iconBg">
-              <lucide-angular [name]="kpi.icon" [size]="14" color="currentColor" [class]="kpi.iconColor" />
+              <svg [lucideIcon]="kpi.icon" [size]="14" color="currentColor" [class]="kpi.iconColor" />
             </div>
           </div>
           <div class="text-2xl font-bold text-[var(--color-text-primary)] mb-1">{{ kpi.value }}</div>
           <div class="flex items-center gap-1 text-xs" [class]="kpi.trend > 0 ? 'text-emerald-600' : 'text-red-500'">
-            <lucide-angular [name]="kpi.trend > 0 ? 'arrow-up-right' : 'arrow-down-right'" [size]="12" color="currentColor" />
+            <svg [lucideIcon]="kpi.trend > 0 ? 'arrow-up-right' : 'arrow-down-right'" [size]="12" color="currentColor" />
             <span>{{ kpi.trend > 0 ? '+' : '' }}{{ kpi.trend }}%</span>
             <span class="text-[var(--color-text-muted)]">vs last period</span>
           </div>
@@ -76,7 +84,7 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
             <p class="text-xs text-[var(--color-text-muted)] mt-0.5">Daily revenue for the last 30 days</p>
           </div>
           <ui-button variant="ghost" size="sm" (click)="downloadChart('revenue')">
-            <lucide-angular prefix name="download" [size]="12" color="currentColor" />
+            <svg lucideDownload prefix [size]="12" color="currentColor" />
             Export
           </ui-button>
         </div>
@@ -125,7 +133,7 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
              (click)="viewReport(report)">
           <div class="flex items-start justify-between mb-4">
             <div class="w-11 h-11 rounded-[var(--radius-lg)] flex items-center justify-center" [class]="report.iconBg">
-              <lucide-angular [name]="report.icon" [size]="20" color="currentColor" [class]="report.iconColor" />
+              <svg [lucideIcon]="report.icon" [size]="20" color="currentColor" [class]="report.iconColor" />
             </div>
             <ui-badge [variant]="report.status === 'ready' ? 'success' : report.status === 'scheduled' ? 'info' : 'neutral'" size="sm">
               {{ report.status | titlecase }}
@@ -135,15 +143,15 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
           <p class="text-xs text-[var(--color-text-muted)] mb-4 line-clamp-2">{{ report.description }}</p>
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-1 text-xs text-[var(--color-text-muted)]">
-              <lucide-angular name="clock" [size]="11" color="currentColor" />
+              <svg lucideClock [size]="11" color="currentColor" />
               <span>{{ report.lastRun }}</span>
             </div>
             <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
               <ui-button variant="ghost" size="xs" (click)="viewReport(report); $event.stopPropagation()">
-                <lucide-angular name="eye" [size]="12" color="currentColor" />
+                <svg lucideEye [size]="12" color="currentColor" />
               </ui-button>
               <ui-button variant="ghost" size="xs" (click)="downloadReport(report); $event.stopPropagation()">
-                <lucide-angular name="download" [size]="12" color="currentColor" />
+                <svg lucideDownload [size]="12" color="currentColor" />
               </ui-button>
             </div>
           </div>
@@ -159,7 +167,7 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
           <p class="text-xs text-[var(--color-text-muted)] mt-0.5">Automated report delivery via email</p>
         </div>
         <ui-button variant="outline" size="sm" (click)="addSchedule()">
-          <lucide-angular prefix name="calendar" [size]="12" color="currentColor" />
+          <svg lucideCalendar prefix [size]="12" color="currentColor" />
           Schedule New
         </ui-button>
       </div>
@@ -169,7 +177,7 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
                       hover:bg-[var(--color-neutral-50)] dark:hover:bg-[var(--color-bg-elevated)] transition-colors">
             <div class="flex items-center gap-3">
               <div class="w-8 h-8 rounded-[var(--radius)] bg-[var(--color-primary-50)] dark:bg-[var(--color-primary-900)]/20 flex items-center justify-center">
-                <lucide-angular name="file-text" [size]="14" color="currentColor" class="text-[var(--color-primary-600)]" />
+                <svg lucideFileText [size]="14" color="currentColor" class="text-[var(--color-primary-600)]" />
               </div>
               <div>
                 <div class="text-sm font-medium text-[var(--color-text-primary)]">{{ sched.name }}</div>
@@ -183,7 +191,7 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
               </div>
               <ui-badge variant="success" size="sm" [dot]="true">Active</ui-badge>
               <ui-button variant="ghost" size="xs" (click)="toggleSchedule(sched)">
-                <lucide-angular name="refresh-cw" [size]="12" color="currentColor" />
+                <svg lucideRefreshCw [size]="12" color="currentColor" />
               </ui-button>
             </div>
           </div>

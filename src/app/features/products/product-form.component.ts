@@ -5,9 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
 import {
-  LucideAngularModule, ArrowLeft, Save, Eye, Package,
-  Tag, BarChart2, Image, Upload, Trash2, Plus, Info
-} from 'lucide-angular';
+  LucideArrowLeft, LucideSave, LucideEye, LucidePackage,
+  LucideTag, LucideBarChart2, LucideImage, LucideUpload, LucideTrash2, LucidePlus, LucideInfo
+} from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { ToastService } from '../../core/services/toast.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
@@ -23,13 +23,14 @@ import { CardComponent } from '../../shared/components/card/card.component';
   imports: [
     FormsModule, RouterLink, CurrencyPipe,
     ButtonComponent, InputComponent, ToggleComponent, BadgeComponent, CardComponent,
-    LucideAngularModule.pick({ ArrowLeft, Save, Eye, Package, Tag, BarChart2, Image, Upload, Trash2, Plus, Info }),
+    LucideArrowLeft, LucideSave, LucideEye, LucidePackage,
+    LucideTag, LucideBarChart2, LucideImage, LucideUpload, LucideTrash2, LucidePlus, LucideInfo,
   ],
   template: `
     <!-- Header -->
     <div class="flex items-center gap-4 mb-6">
       <ui-button variant="ghost" size="sm" [routerLink]="['/products']">
-        <lucide-angular prefix name="arrow-left" [size]="14" color="currentColor" />
+        <svg lucideArrowLeft prefix [size]="14" color="currentColor" />
         Products
       </ui-button>
       <div class="flex-1">
@@ -42,12 +43,12 @@ import { CardComponent } from '../../shared/components/card/card.component';
       </div>
       <div class="flex items-center gap-2">
         <ui-button variant="outline" size="sm" (click)="preview()">
-          <lucide-angular prefix name="eye" [size]="14" color="currentColor" />
+          <svg lucideEye prefix [size]="14" color="currentColor" />
           Preview
         </ui-button>
         <ui-button variant="outline" size="sm" (click)="saveDraft()" [loading]="savingDraft()">Save Draft</ui-button>
         <ui-button variant="primary" (click)="publish()" [loading]="publishing()">
-          <lucide-angular prefix name="save" [size]="14" color="currentColor" />
+          <svg lucideSave prefix [size]="14" color="currentColor" />
           {{ isEdit() ? 'Update' : 'Publish' }}
         </ui-button>
       </div>
@@ -61,7 +62,7 @@ import { CardComponent } from '../../shared/components/card/card.component';
         <!-- Basic Information -->
         <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-6">
           <div class="flex items-center gap-2 mb-5">
-            <lucide-angular name="package" [size]="16" color="currentColor" class="text-[var(--color-primary-600)]" />
+            <svg lucidePackage [size]="16" color="currentColor" class="text-[var(--color-primary-600)]" />
             <h2 class="text-base font-semibold text-[var(--color-text-primary)]">Basic Information</h2>
           </div>
           <div class="space-y-4">
@@ -91,18 +92,18 @@ import { CardComponent } from '../../shared/components/card/card.component';
         <!-- Media -->
         <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-6">
           <div class="flex items-center gap-2 mb-5">
-            <lucide-angular name="image" [size]="16" color="currentColor" class="text-[var(--color-primary-600)]" />
+            <svg lucideImage [size]="16" color="currentColor" class="text-[var(--color-primary-600)]" />
             <h2 class="text-base font-semibold text-[var(--color-text-primary)]">Product Media</h2>
           </div>
           <!-- Drop zone -->
           <div class="border-2 border-dashed border-[var(--color-border)] rounded-[var(--radius-lg)] p-8 text-center
                       hover:border-[var(--color-primary-400)] hover:bg-[var(--color-primary-50)] dark:hover:bg-[var(--color-primary-900)]/5
                       transition-colors cursor-pointer group">
-            <lucide-angular name="upload" [size]="32" color="currentColor" class="text-[var(--color-text-muted)] group-hover:text-[var(--color-primary-500)] mx-auto mb-3 transition-colors" />
+            <svg lucideUpload [size]="32" color="currentColor" class="text-[var(--color-text-muted)] group-hover:text-[var(--color-primary-500)] mx-auto mb-3 transition-colors" />
             <p class="text-sm font-medium text-[var(--color-text-primary)]">Drop files here or click to upload</p>
             <p class="text-xs text-[var(--color-text-muted)] mt-1">PNG, JPG, GIF or WebP · Max 5MB each · Up to 10 images</p>
             <ui-button variant="outline" size="sm" class="mt-4">
-              <lucide-angular prefix name="upload" [size]="12" color="currentColor" />
+              <svg lucideUpload prefix [size]="12" color="currentColor" />
               Choose Files
             </ui-button>
           </div>
@@ -111,18 +112,18 @@ import { CardComponent } from '../../shared/components/card/card.component';
             @for (i of [1,2,3]; track i) {
               <div class="relative aspect-square rounded-[var(--radius)] bg-[var(--color-neutral-100)] dark:bg-[var(--color-bg-elevated)]
                           border border-[var(--color-border)] flex items-center justify-center group/thumb cursor-pointer overflow-hidden">
-                <lucide-angular name="image" [size]="24" color="currentColor" class="text-[var(--color-text-muted)]" />
+                <svg lucideImage [size]="24" color="currentColor" class="text-[var(--color-text-muted)]" />
                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover/thumb:opacity-100 transition-opacity
                             flex items-center justify-center gap-1">
                   <button class="p-1 rounded bg-white/20 hover:bg-white/40 text-white transition-colors">
-                    <lucide-angular name="trash-2" [size]="12" color="currentColor" />
+                    <svg lucideTrash2 [size]="12" color="currentColor" />
                   </button>
                 </div>
               </div>
             }
             <div class="aspect-square rounded-[var(--radius)] border-2 border-dashed border-[var(--color-border)]
                         flex items-center justify-center cursor-pointer hover:border-[var(--color-primary-400)] transition-colors">
-              <lucide-angular name="plus" [size]="20" color="currentColor" class="text-[var(--color-text-muted)]" />
+              <svg lucidePlus [size]="20" color="currentColor" class="text-[var(--color-text-muted)]" />
             </div>
           </div>
         </div>
@@ -130,7 +131,7 @@ import { CardComponent } from '../../shared/components/card/card.component';
         <!-- Pricing -->
         <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-6">
           <div class="flex items-center gap-2 mb-5">
-            <lucide-angular name="tag" [size]="16" color="currentColor" class="text-[var(--color-primary-600)]" />
+            <svg lucideTag [size]="16" color="currentColor" class="text-[var(--color-primary-600)]" />
             <h2 class="text-base font-semibold text-[var(--color-text-primary)]">Pricing</h2>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -169,7 +170,7 @@ import { CardComponent } from '../../shared/components/card/card.component';
           </div>
           @if (form.price && form.comparePrice && form.price < form.comparePrice) {
             <div class="mt-3 flex items-center gap-2 text-xs text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 rounded-[var(--radius)] px-3 py-2">
-              <lucide-angular name="info" [size]="12" color="currentColor" />
+              <svg lucideInfo [size]="12" color="currentColor" />
               Discount: {{ discountPercent() }}% off — customers will see the original price crossed out
             </div>
           }
@@ -178,7 +179,7 @@ import { CardComponent } from '../../shared/components/card/card.component';
         <!-- Inventory -->
         <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-6">
           <div class="flex items-center gap-2 mb-5">
-            <lucide-angular name="bar-chart-2" [size]="16" color="currentColor" class="text-[var(--color-primary-600)]" />
+            <svg lucideBarChart2 [size]="16" color="currentColor" class="text-[var(--color-primary-600)]" />
             <h2 class="text-base font-semibold text-[var(--color-text-primary)]">Inventory & Shipping</h2>
           </div>
           <div class="space-y-4">
@@ -342,7 +343,6 @@ export class ProductFormComponent implements OnInit {
       [{ label: 'Management' }, { label: 'Products', route: '/products' }, { label: this.isEdit() ? 'Edit' : 'New' }]
     );
     if (this.isEdit()) {
-      // Pre-fill with dummy data for demo
       this.form.name = 'Wireless Noise-Cancel Headphones';
       this.form.sku = 'ELC-001';
       this.form.description = 'Premium wireless headphones with active noise cancellation, 30-hour battery life, and Hi-Res Audio certification.';

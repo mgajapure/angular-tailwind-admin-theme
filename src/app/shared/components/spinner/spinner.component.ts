@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { LucideAngularModule, Loader2 } from 'lucide-angular';
+import { LucideLoader2 } from '@lucide/angular';
 
 @Component({
   selector: 'ui-spinner',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LucideAngularModule.pick({ Loader2 })],
+  imports: [LucideLoader2],
   template: `
-    <lucide-angular name="loader-2" [class]="spinnerClass()" color="currentColor"
+    <svg lucideLoader2 [class]="spinnerClass()" color="currentColor"
          [attr.aria-label]="label()" role="status" [size]="sizeValue()" />
     @if (label() && showLabel()) {
       <span class="sr-only">{{ label() }}</span>

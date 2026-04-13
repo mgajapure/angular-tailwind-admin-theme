@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, Plus, Search, Trash2 } from 'lucide-angular';
+import { LucidePlus, LucideSearch, LucideTrash2 } from '@lucide/angular';
 import { TitleCasePipe } from '@angular/common';
 import { LayoutService } from '../../core/services/layout.service';
 import { ToastService } from '../../core/services/toast.service';
@@ -33,7 +33,7 @@ interface User {
     AvatarComponent, BadgeComponent, ButtonComponent,
     InputComponent, SkeletonComponent, EmptyStateComponent,
     PaginationComponent, ModalComponent,
-    LucideAngularModule.pick({ Plus, Search, Trash2 }),
+    LucidePlus, LucideSearch, LucideTrash2,
   ],
   template: `
     <!-- Page header -->
@@ -45,7 +45,7 @@ interface User {
         </p>
       </div>
       <ui-button variant="primary" (click)="openAddModal()">
-        <lucide-angular prefix name="plus" [size]="14" color="currentColor" />
+        <svg lucidePlus prefix [size]="14" color="currentColor" />
         Add User
       </ui-button>
     </div>
@@ -57,7 +57,7 @@ interface User {
 
         <!-- Search -->
         <div class="relative flex-1 min-w-52">
-          <lucide-angular name="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none"
+          <svg lucideSearch class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none"
                [size]="14" color="currentColor" />
           <input
             [(ngModel)]="searchQuery"
@@ -157,7 +157,7 @@ interface User {
                     <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <ui-button variant="ghost" size="xs" (click)="editUser(user)">Edit</ui-button>
                       <ui-button variant="ghost" size="xs" (click)="deleteUser(user)">
-                        <lucide-angular name="trash-2" [size]="12" color="currentColor" class="text-red-500" />
+                        <svg lucideTrash2 [size]="12" color="currentColor" class="text-red-500" />
                       </ui-button>
                     </div>
                   </td>

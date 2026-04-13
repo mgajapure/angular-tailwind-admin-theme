@@ -5,9 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { DecimalPipe, CurrencyPipe } from '@angular/common';
 import {
-  LucideAngularModule, Plus, Search, Filter, Download, Edit2,
-  Trash2, Package, AlertTriangle, CheckCircle, XCircle, ChevronDown
-} from 'lucide-angular';
+  LucidePlus, LucideSearch, LucideFilter, LucideDownload, LucideEdit2,
+  LucideTrash2, LucidePackage, LucideAlertTriangle, LucideCheckCircle, LucideXCircle, LucideChevronDown
+} from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { ToastService } from '../../core/services/toast.service';
 import { BadgeComponent, BadgeVariant } from '../../shared/components/badge/badge.component';
@@ -42,7 +42,8 @@ interface Product {
     BadgeComponent, ButtonComponent, AvatarComponent,
     SkeletonComponent, EmptyStateComponent, PaginationComponent,
     StatCardComponent, ModalComponent,
-    LucideAngularModule.pick({ Plus, Search, Filter, Download, Edit2, Trash2, Package, AlertTriangle, CheckCircle, XCircle, ChevronDown }),
+    LucidePlus, LucideSearch, LucideFilter, LucideDownload, LucideEdit2,
+    LucideTrash2, LucidePackage, LucideAlertTriangle, LucideCheckCircle, LucideXCircle, LucideChevronDown,
   ],
   template: `
     <!-- Header -->
@@ -53,11 +54,11 @@ interface Product {
       </div>
       <div class="flex items-center gap-2">
         <ui-button variant="outline" size="sm" (click)="exportProducts()">
-          <lucide-angular prefix name="download" [size]="14" color="currentColor" />
+          <svg lucideDownload prefix [size]="14" color="currentColor" />
           Export
         </ui-button>
         <ui-button variant="primary" [routerLink]="['/products/new']">
-          <lucide-angular prefix name="plus" [size]="14" color="currentColor" />
+          <svg lucidePlus prefix [size]="14" color="currentColor" />
           Add Product
         </ui-button>
       </div>
@@ -69,7 +70,7 @@ interface Product {
         <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-4">
           <div class="flex items-center gap-3">
             <div class="w-9 h-9 rounded-[var(--radius)] bg-[var(--color-primary-50)] dark:bg-[var(--color-primary-900)]/20 flex items-center justify-center">
-              <lucide-angular name="package" [size]="16" color="currentColor" class="text-[var(--color-primary-600)]" />
+              <svg lucidePackage [size]="16" color="currentColor" class="text-[var(--color-primary-600)]" />
             </div>
             <div>
               <div class="text-2xl font-bold text-[var(--color-text-primary)]">{{ allProducts().length }}</div>
@@ -80,7 +81,7 @@ interface Product {
         <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-4">
           <div class="flex items-center gap-3">
             <div class="w-9 h-9 rounded-[var(--radius)] bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
-              <lucide-angular name="check-circle" [size]="16" color="currentColor" class="text-emerald-600" />
+              <svg lucideCheckCircle [size]="16" color="currentColor" class="text-emerald-600" />
             </div>
             <div>
               <div class="text-2xl font-bold text-[var(--color-text-primary)]">{{ activeCount() }}</div>
@@ -91,7 +92,7 @@ interface Product {
         <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-4">
           <div class="flex items-center gap-3">
             <div class="w-9 h-9 rounded-[var(--radius)] bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center">
-              <lucide-angular name="alert-triangle" [size]="16" color="currentColor" class="text-amber-600" />
+              <svg lucideAlertTriangle [size]="16" color="currentColor" class="text-amber-600" />
             </div>
             <div>
               <div class="text-2xl font-bold text-[var(--color-text-primary)]">{{ lowStockCount() }}</div>
@@ -102,7 +103,7 @@ interface Product {
         <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-4">
           <div class="flex items-center gap-3">
             <div class="w-9 h-9 rounded-[var(--radius)] bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
-              <lucide-angular name="x-circle" [size]="16" color="currentColor" class="text-red-600" />
+              <svg lucideXCircle [size]="16" color="currentColor" class="text-red-600" />
             </div>
             <div>
               <div class="text-2xl font-bold text-[var(--color-text-primary)]">{{ outOfStockCount() }}</div>
@@ -117,7 +118,7 @@ interface Product {
     <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-4 mb-5">
       <div class="flex flex-wrap items-center gap-3">
         <div class="relative flex-1 min-w-52">
-          <lucide-angular name="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none" [size]="14" color="currentColor" />
+          <svg lucideSearch class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none" [size]="14" color="currentColor" />
           <input [(ngModel)]="searchQuery" placeholder="Search products…"
             class="w-full pl-9 pr-4 py-2 text-sm rounded-[var(--radius)] border border-[var(--color-border)]
                    bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]
@@ -197,7 +198,7 @@ interface Product {
                     <div class="flex items-center gap-3">
                       <div class="w-10 h-10 rounded-[var(--radius)] bg-[var(--color-neutral-100)] dark:bg-[var(--color-bg-elevated)]
                                   flex items-center justify-center text-[var(--color-text-muted)] shrink-0 overflow-hidden">
-                        <lucide-angular name="package" [size]="18" color="currentColor" />
+                        <svg lucidePackage [size]="18" color="currentColor" />
                       </div>
                       <div>
                         <div class="text-sm font-medium text-[var(--color-text-primary)]">{{ product.name }}</div>
@@ -224,10 +225,10 @@ interface Product {
                   <td class="px-4 py-3">
                     <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <ui-button variant="ghost" size="xs" [routerLink]="['/products', product.id]">
-                        <lucide-angular name="edit-2" [size]="12" color="currentColor" />
+                        <svg lucideEdit2 [size]="12" color="currentColor" />
                       </ui-button>
                       <ui-button variant="ghost" size="xs" (click)="deleteProduct(product)">
-                        <lucide-angular name="trash-2" [size]="12" color="currentColor" class="text-red-500" />
+                        <svg lucideTrash2 [size]="12" color="currentColor" class="text-red-500" />
                       </ui-button>
                     </div>
                   </td>

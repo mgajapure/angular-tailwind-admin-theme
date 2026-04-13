@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { LucideAngularModule, ChevronLeft, ChevronRight } from 'lucide-angular';
+import { LucideChevronLeft, LucideChevronRight } from '@lucide/angular';
 
 @Component({
   selector: 'ui-pagination',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LucideAngularModule.pick({ ChevronLeft, ChevronRight })],
+  imports: [LucideChevronLeft, LucideChevronRight],
   template: `
     <div class="flex items-center justify-between gap-4 flex-wrap">
       <p class="text-sm text-[var(--color-text-secondary)]">
@@ -17,7 +17,7 @@ import { LucideAngularModule, ChevronLeft, ChevronRight } from 'lucide-angular';
       <div class="flex items-center gap-1">
         <!-- Prev -->
         <button [disabled]="page() === 1" (click)="go(page() - 1)" [class]="btnClass(false, page() === 1)" aria-label="Previous page">
-          <lucide-angular name="chevron-left" [size]="14" color="currentColor" />
+          <svg lucideChevronLeft [size]="14" color="currentColor" />
         </button>
 
         @for (p of pages(); track p) {
@@ -30,7 +30,7 @@ import { LucideAngularModule, ChevronLeft, ChevronRight } from 'lucide-angular';
 
         <!-- Next -->
         <button [disabled]="page() === totalPages()" (click)="go(page() + 1)" [class]="btnClass(false, page() === totalPages())" aria-label="Next page">
-          <lucide-angular name="chevron-right" [size]="14" color="currentColor" />
+          <svg lucideChevronRight [size]="14" color="currentColor" />
         </button>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ConfigService } from '../../core/services/config.service';
-import { LucideAngularModule, Sun, Moon, Monitor } from 'lucide-angular';
+import { LucideSun, LucideMoon, LucideMonitor } from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { DrawerComponent } from '../../shared/components/drawer/drawer.component';
 import { ToggleComponent } from '../../shared/components/form/toggle/toggle.component';
@@ -11,7 +11,7 @@ import { ToastService } from '../../core/services/toast.service';
   selector: 'app-settings-panel',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DrawerComponent, ToggleComponent, LucideAngularModule.pick({ Sun, Moon, Monitor })],
+  imports: [DrawerComponent, ToggleComponent, LucideSun, LucideMoon, LucideMonitor],
   template: `
     <ui-drawer [open]="layout.isSettingsOpen()" title="Theme Settings" size="md" (close)="layout.closeSettings()">
 
@@ -51,11 +51,11 @@ import { ToastService } from '../../core/services/toast.service';
                   : 'border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-primary-300)]'"
                 class="flex flex-col items-center gap-2 p-3 rounded-[var(--radius)] border text-xs font-medium transition-all capitalize">
                 @if (mode === 'light') {
-                  <lucide-angular name="sun" [size]="20" color="currentColor" />
+                  <svg lucideSun [size]="20" color="currentColor" />
                 } @else if (mode === 'dark') {
-                  <lucide-angular name="moon" [size]="20" color="currentColor" />
+                  <svg lucideMoon [size]="20" color="currentColor" />
                 } @else {
-                  <lucide-angular name="monitor" [size]="20" color="currentColor" />
+                  <svg lucideMonitor [size]="20" color="currentColor" />
                 }
                 {{ mode }}
               </button>

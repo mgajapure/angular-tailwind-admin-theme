@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LucideAngularModule, Menu, Search, Sun, Moon, Bell, ChevronDown, Settings } from 'lucide-angular';
+import {
+  LucideMenu, LucideSearch, LucideSun, LucideMoon, LucideBell, LucideChevronDown, LucideSettings
+} from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -13,7 +15,7 @@ import { ConfigService } from '../../core/services/config.service';
   selector: 'app-topbar',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, AvatarComponent, BreadcrumbComponent, LucideAngularModule.pick({ Menu, Search, Sun, Moon, Bell, ChevronDown, Settings })],
+  imports: [RouterLink, AvatarComponent, BreadcrumbComponent, LucideMenu, LucideSearch, LucideSun, LucideMoon, LucideBell, LucideChevronDown, LucideSettings],
   template: `
     <header class="fixed top-0 right-0 z-30 flex items-center h-[var(--topbar-height)]
                    bg-[var(--color-bg-surface)] border-b border-[var(--color-border)]
@@ -27,7 +29,7 @@ import { ConfigService } from '../../core/services/config.service';
                hover:text-[var(--color-text-primary)] hover:bg-[var(--color-neutral-100)]
                dark:hover:bg-[var(--color-bg-elevated)] transition-colors"
         aria-label="Toggle sidebar">
-        <lucide-angular name="menu" [size]="18" color="currentColor" />
+        <svg lucideMenu [size]="18" color="currentColor" />
       </button>
 
       <!-- Breadcrumbs -->
@@ -55,7 +57,7 @@ import { ConfigService } from '../../core/services/config.service';
                rounded-[var(--radius)] bg-[var(--color-neutral-50)] dark:bg-[var(--color-bg-elevated)]
                hover:border-[var(--color-primary-400)] transition-colors w-52"
         (click)="openCommandPalette()">
-        <lucide-angular name="search" [size]="14" color="currentColor" />
+        <svg lucideSearch [size]="14" color="currentColor" />
         <span class="flex-1 text-left">Search…</span>
         <kbd class="text-[10px] font-medium opacity-60">⌘K</kbd>
       </button>
@@ -68,9 +70,9 @@ import { ConfigService } from '../../core/services/config.service';
                dark:hover:bg-[var(--color-bg-elevated)] transition-colors"
         aria-label="Toggle dark mode">
         @if (isDark()) {
-          <lucide-angular name="sun" [size]="18" color="currentColor" />
+          <svg lucideSun [size]="18" color="currentColor" />
         } @else {
-          <lucide-angular name="moon" [size]="18" color="currentColor" />
+          <svg lucideMoon [size]="18" color="currentColor" />
         }
       </button>
 
@@ -82,7 +84,7 @@ import { ConfigService } from '../../core/services/config.service';
                  hover:text-[var(--color-text-primary)] hover:bg-[var(--color-neutral-100)]
                  dark:hover:bg-[var(--color-bg-elevated)] transition-colors"
           aria-label="Notifications">
-          <lucide-angular name="bell" [size]="18" color="currentColor" />
+          <svg lucideBell [size]="18" color="currentColor" />
           <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-[var(--color-bg-surface)]"></span>
         </button>
 
@@ -126,7 +128,7 @@ import { ConfigService } from '../../core/services/config.service';
           <span class="hidden lg:block text-sm font-medium text-[var(--color-text-primary)]">
             {{ getFirstName() }}
           </span>
-          <lucide-angular name="chevron-down" [size]="14" color="currentColor" class="text-[var(--color-text-muted)]" />
+          <svg lucideChevronDown [size]="14" color="currentColor" class="text-[var(--color-text-muted)]" />
         </button>
 
         @if (userMenuOpen()) {
@@ -160,7 +162,7 @@ import { ConfigService } from '../../core/services/config.service';
                hover:text-[var(--color-text-primary)] hover:bg-[var(--color-neutral-100)]
                dark:hover:bg-[var(--color-bg-elevated)] transition-colors"
         aria-label="Theme settings">
-        <lucide-angular name="settings" [size]="18" color="currentColor" />
+        <svg lucideSettings [size]="18" color="currentColor" />
       </button>
     </header>
   `

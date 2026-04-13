@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, model } from '@angular/core';
-import { LucideAngularModule, Eye, Home, Clock, Activity } from 'lucide-angular';
+import { LucideEye, LucideHome, LucideClock, LucideActivity } from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { StatCardComponent } from '../../shared/components/stat-card/stat-card.component';
 import { BadgeComponent } from '../../shared/components/badge/badge.component';
@@ -10,7 +10,7 @@ import { TabsComponent, Tab } from '../../shared/components/tabs/tabs.component'
   selector: 'app-analytics',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [StatCardComponent, BadgeComponent, ProgressComponent, TabsComponent, LucideAngularModule.pick({ Eye, Home, Clock, Activity })],
+  imports: [StatCardComponent, BadgeComponent, ProgressComponent, TabsComponent, LucideEye, LucideHome, LucideClock, LucideActivity],
   template: `
     <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
       <div>
@@ -31,16 +31,16 @@ import { TabsComponent, Tab } from '../../shared/components/tabs/tabs.component'
     <!-- KPIs -->
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
       <ui-stat-card label="Page Views" [value]="248300" [trend]="18.3" [sparkline]="[40,55,45,70,60,80,72,90]" color="primary">
-        <lucide-angular stat-icon name="eye" [size]="18" color="currentColor" />
+        <svg lucideEye stat-icon [size]="18" color="currentColor" />
       </ui-stat-card>
       <ui-stat-card label="Bounce Rate" [value]="34" suffix="%" [trend]="-5.2" trendLabel="improvement" [sparkline]="[55,50,48,42,45,38,36,34]" color="success">
-        <lucide-angular stat-icon name="home" [size]="18" color="currentColor" />
+        <svg lucideHome stat-icon [size]="18" color="currentColor" />
       </ui-stat-card>
       <ui-stat-card label="Avg. Session" [value]="4" suffix="m 32s" [trend]="12.1" [sparkline]="[2.1,2.8,3.2,3.5,3.8,4.1,4.3,4.5]" color="warning">
-        <lucide-angular stat-icon name="clock" [size]="18" color="currentColor" />
+        <svg lucideClock stat-icon [size]="18" color="currentColor" />
       </ui-stat-card>
       <ui-stat-card label="Goal Completion" [value]="68" suffix="%" [trend]="4.7" [sparkline]="[52,55,58,60,62,64,66,68]" color="info">
-        <lucide-angular stat-icon name="activity" [size]="18" color="currentColor" />
+        <svg lucideActivity stat-icon [size]="18" color="currentColor" />
       </ui-stat-card>
     </div>
 

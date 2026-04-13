@@ -4,10 +4,11 @@ import {
 import { FormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import {
-  LucideAngularModule, Upload, Search, Grid, List, Image, Film,
-  FileText, Music, Archive, Trash2, Download, Copy, Eye,
-  HardDrive, Check, X, MoreHorizontal
-} from 'lucide-angular';
+  LucideUpload, LucideSearch, LucideGrid2x2, LucideList, LucideTrash2,
+  LucideDownload, LucideCopy, LucideEye, LucideHardDrive, LucideCheck, LucideX,
+  LucideImage, LucideFilm, LucideFileText, LucideMusic, LucideArchive,
+  LucideDynamicIcon, provideLucideIcons,
+} from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { ToastService } from '../../core/services/toast.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
@@ -34,10 +35,15 @@ interface MediaFile {
   selector: 'app-media',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    provideLucideIcons(LucideImage, LucideFilm, LucideFileText, LucideMusic, LucideArchive),
+  ],
   imports: [
     FormsModule, DecimalPipe,
     ButtonComponent, BadgeComponent, EmptyStateComponent, ModalComponent,
-    LucideAngularModule.pick({ Upload, Search, Grid, List, Image, Film, FileText, Music, Archive, Trash2, Download, Copy, Eye, HardDrive, Check, X, MoreHorizontal }),
+    LucideUpload, LucideSearch, LucideGrid2x2, LucideList, LucideTrash2,
+    LucideDownload, LucideCopy, LucideEye, LucideHardDrive, LucideCheck, LucideX,
+    LucideDynamicIcon,
   ],
   template: `
     <!-- Header -->
@@ -47,7 +53,7 @@ interface MediaFile {
         <p class="text-sm text-[var(--color-text-secondary)] mt-0.5">Manage images, videos, documents, and other files</p>
       </div>
       <ui-button variant="primary" (click)="triggerUpload()">
-        <lucide-angular prefix name="upload" [size]="14" color="currentColor" />
+        <svg lucideUpload prefix [size]="14" color="currentColor" />
         Upload Files
       </ui-button>
     </div>
@@ -56,7 +62,7 @@ interface MediaFile {
     <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-5 mb-5">
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
-          <lucide-angular name="hard-drive" [size]="16" color="currentColor" class="text-[var(--color-primary-600)]" />
+          <svg lucideHardDrive [size]="16" color="currentColor" class="text-[var(--color-primary-600)]" />
           <span class="text-sm font-semibold text-[var(--color-text-primary)]">Storage Usage</span>
         </div>
         <span class="text-sm text-[var(--color-text-muted)]">4.2 GB of 20 GB used (21%)</span>
@@ -99,7 +105,7 @@ interface MediaFile {
 
         <!-- Search -->
         <div class="relative flex-1 min-w-48">
-          <lucide-angular name="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none" [size]="13" color="currentColor" />
+          <svg lucideSearch class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none" [size]="13" color="currentColor" />
           <input [(ngModel)]="searchQuery" placeholder="Search files…"
             class="w-full pl-8 pr-4 py-2 text-sm rounded-[var(--radius)] border border-[var(--color-border)]
                    bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]
@@ -125,7 +131,7 @@ interface MediaFile {
             [class.dark:bg-[var(--color-primary-900)]/20]="viewMode() === 'grid'"
             [class.text-[var(--color-primary-600)]]="viewMode() === 'grid'"
             [class.text-[var(--color-text-muted)]]="viewMode() !== 'grid'">
-            <lucide-angular name="grid" [size]="14" color="currentColor" />
+            <svg lucideGrid2x2 [size]="14" color="currentColor" />
           </button>
           <button (click)="viewMode.set('list')"
             class="p-1.5 rounded-[var(--radius-sm)] transition-colors"
@@ -133,7 +139,7 @@ interface MediaFile {
             [class.dark:bg-[var(--color-primary-900)]/20]="viewMode() === 'list'"
             [class.text-[var(--color-primary-600)]]="viewMode() === 'list'"
             [class.text-[var(--color-text-muted)]]="viewMode() !== 'list'">
-            <lucide-angular name="list" [size]="14" color="currentColor" />
+            <svg lucideList [size]="14" color="currentColor" />
           </button>
         </div>
 
@@ -141,15 +147,15 @@ interface MediaFile {
           <div class="flex items-center gap-2 ml-2">
             <span class="text-xs font-medium text-[var(--color-primary-600)]">{{ selectedIds().size }} selected</span>
             <ui-button variant="outline" size="xs" (click)="bulkDownload()">
-              <lucide-angular prefix name="download" [size]="10" color="currentColor" />
+              <svg lucideDownload prefix [size]="10" color="currentColor" />
               Download
             </ui-button>
             <ui-button variant="ghost" size="xs" (click)="bulkDelete()">
-              <lucide-angular prefix name="trash-2" [size]="10" color="currentColor" class="text-red-500" />
+              <svg lucideTrash2 prefix [size]="10" color="currentColor" class="text-red-500" />
               Delete
             </ui-button>
             <ui-button variant="ghost" size="xs" (click)="selectedIds.set(new Set())">
-              <lucide-angular name="x" [size]="10" color="currentColor" />
+              <svg lucideX [size]="10" color="currentColor" />
             </ui-button>
           </div>
         }
@@ -173,12 +179,12 @@ interface MediaFile {
                  (click)="toggleFileSelect(file.id)">
               <!-- Preview area -->
               <div class="aspect-square flex items-center justify-center" [class]="filePreviewBg(file.type)">
-                <lucide-angular [name]="fileIcon(file.type)" [size]="32" color="currentColor" [class]="fileIconColor(file.type)" />
+                <svg [lucideIcon]="fileIcon(file.type)" [size]="32" color="currentColor" [class]="fileIconColor(file.type)" />
               </div>
               <!-- Selection check -->
               @if (selectedIds().has(file.id)) {
                 <div class="absolute top-2 left-2 w-5 h-5 rounded-full bg-[var(--color-primary-600)] flex items-center justify-center">
-                  <lucide-angular name="check" [size]="10" color="currentColor" class="text-white" />
+                  <svg lucideCheck [size]="10" color="currentColor" class="text-white" />
                 </div>
               }
               <!-- Hover overlay -->
@@ -186,15 +192,15 @@ interface MediaFile {
                    (click)="$event.stopPropagation()">
                 <button class="p-1.5 bg-white/90 rounded-[var(--radius-sm)] hover:bg-white transition-colors"
                         (click)="viewFile(file)" title="Preview">
-                  <lucide-angular name="eye" [size]="12" color="currentColor" class="text-gray-800" />
+                  <svg lucideEye [size]="12" color="currentColor" class="text-gray-800" />
                 </button>
                 <button class="p-1.5 bg-white/90 rounded-[var(--radius-sm)] hover:bg-white transition-colors"
                         (click)="copyUrl(file)" title="Copy URL">
-                  <lucide-angular name="copy" [size]="12" color="currentColor" class="text-gray-800" />
+                  <svg lucideCopy [size]="12" color="currentColor" class="text-gray-800" />
                 </button>
                 <button class="p-1.5 bg-white/90 rounded-[var(--radius-sm)] hover:bg-white transition-colors"
                         (click)="deleteFile(file)" title="Delete">
-                  <lucide-angular name="trash-2" [size]="12" color="currentColor" class="text-red-500" />
+                  <svg lucideTrash2 [size]="12" color="currentColor" class="text-red-500" />
                 </button>
               </div>
               <!-- Info -->
@@ -236,7 +242,7 @@ interface MediaFile {
                   <td class="px-4 py-3">
                     <div class="flex items-center gap-3">
                       <div class="w-8 h-8 rounded-[var(--radius)] flex items-center justify-center shrink-0" [class]="filePreviewBg(file.type)">
-                        <lucide-angular [name]="fileIcon(file.type)" [size]="14" color="currentColor" [class]="fileIconColor(file.type)" />
+                        <svg [lucideIcon]="fileIcon(file.type)" [size]="14" color="currentColor" [class]="fileIconColor(file.type)" />
                       </div>
                       <div>
                         <div class="text-sm font-medium text-[var(--color-text-primary)]">{{ file.name }}</div>
@@ -255,16 +261,16 @@ interface MediaFile {
                   <td class="px-4 py-3">
                     <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <ui-button variant="ghost" size="xs" (click)="viewFile(file)">
-                        <lucide-angular name="eye" [size]="12" color="currentColor" />
+                        <svg lucideEye [size]="12" color="currentColor" />
                       </ui-button>
                       <ui-button variant="ghost" size="xs" (click)="copyUrl(file)">
-                        <lucide-angular name="copy" [size]="12" color="currentColor" />
+                        <svg lucideCopy [size]="12" color="currentColor" />
                       </ui-button>
                       <ui-button variant="ghost" size="xs" (click)="downloadFile(file)">
-                        <lucide-angular name="download" [size]="12" color="currentColor" />
+                        <svg lucideDownload [size]="12" color="currentColor" />
                       </ui-button>
                       <ui-button variant="ghost" size="xs" (click)="deleteFile(file)">
-                        <lucide-angular name="trash-2" [size]="12" color="currentColor" class="text-red-500" />
+                        <svg lucideTrash2 [size]="12" color="currentColor" class="text-red-500" />
                       </ui-button>
                     </div>
                   </td>

@@ -3,11 +3,13 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-  LucideAngularModule, Search, BookOpen, Video, MessageCircle,
-  HelpCircle, Zap, Settings, Users, CreditCard, Shield, BarChart2,
-  ChevronRight, ExternalLink, ThumbsUp, ThumbsDown, Star, Mail,
-  Phone, Clock, CheckCircle, ArrowRight, Globe, FileText
-} from 'lucide-angular';
+  LucideSearch, LucideFileText, LucideArrowRight, LucideChevronRight,
+  LucideClock, LucideThumbsUp, LucideCheckCircle, LucideExternalLink,
+  LucideMessageCircle, LucideMail, LucideStar,
+  LucideZap, LucideSettings, LucideUsers, LucideCreditCard, LucideShield,
+  LucideBarChart2, LucideGlobe, LucideVideo, LucideBookOpen,
+  LucideDynamicIcon, provideLucideIcons,
+} from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { ToastService } from '../../core/services/toast.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
@@ -18,10 +20,20 @@ import { InputComponent } from '../../shared/components/form/input/input.compone
   selector: 'app-help',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    provideLucideIcons(
+      LucideZap, LucideSettings, LucideUsers, LucideCreditCard, LucideShield,
+      LucideBarChart2, LucideGlobe, LucideVideo, LucideBookOpen, LucideFileText,
+      LucideMessageCircle, LucideCheckCircle, LucideStar
+    ),
+  ],
   imports: [
     FormsModule,
     ButtonComponent, BadgeComponent, InputComponent,
-    LucideAngularModule.pick({ Search, BookOpen, Video, MessageCircle, HelpCircle, Zap, Settings, Users, CreditCard, Shield, BarChart2, ChevronRight, ExternalLink, ThumbsUp, ThumbsDown, Star, Mail, Phone, Clock, CheckCircle, ArrowRight, Globe, FileText }),
+    LucideSearch, LucideFileText, LucideArrowRight, LucideChevronRight,
+    LucideClock, LucideThumbsUp, LucideCheckCircle, LucideExternalLink,
+    LucideMessageCircle, LucideMail, LucideStar,
+    LucideDynamicIcon,
   ],
   template: `
     <!-- Header -->
@@ -40,7 +52,7 @@ import { InputComponent } from '../../shared/components/form/input/input.compone
         <h2 class="text-2xl font-bold text-white mb-2">How can we help you?</h2>
         <p class="text-sm text-white/70 mb-6">Search our knowledge base or browse topics below</p>
         <div class="relative">
-          <lucide-angular name="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" [size]="16" color="currentColor" />
+          <svg lucideSearch class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" [size]="16" color="currentColor" />
           <input [(ngModel)]="searchQuery" placeholder="Search documentation… e.g. 'reset password', 'API keys'"
             class="w-full pl-11 pr-4 py-3 text-sm rounded-[var(--radius-lg)] border-0
                    bg-white text-gray-900 placeholder:text-gray-400 shadow-lg
@@ -63,14 +75,14 @@ import { InputComponent } from '../../shared/components/form/input/input.compone
             <div class="flex items-start gap-3 p-3 rounded-[var(--radius-lg)] hover:bg-[var(--color-neutral-50)] dark:hover:bg-[var(--color-bg-elevated)] transition-colors cursor-pointer"
                  (click)="openArticle(result)">
               <div class="w-8 h-8 rounded-[var(--radius)] bg-[var(--color-primary-50)] dark:bg-[var(--color-primary-900)]/20 flex items-center justify-center shrink-0 mt-0.5">
-                <lucide-angular name="file-text" [size]="14" color="currentColor" class="text-[var(--color-primary-600)]" />
+                <svg lucideFileText [size]="14" color="currentColor" class="text-[var(--color-primary-600)]" />
               </div>
               <div class="flex-1 min-w-0">
                 <div class="text-sm font-medium text-[var(--color-text-primary)]">{{ result.title }}</div>
                 <div class="text-xs text-[var(--color-text-muted)] mt-0.5 line-clamp-1">{{ result.excerpt }}</div>
                 <div class="text-[10px] text-[var(--color-primary-600)] mt-1">{{ result.category }}</div>
               </div>
-              <lucide-angular name="arrow-right" [size]="14" color="currentColor" class="text-[var(--color-text-muted)] shrink-0 mt-1" />
+              <svg lucideArrowRight [size]="14" color="currentColor" class="text-[var(--color-text-muted)] shrink-0 mt-1" />
             </div>
           }
         </div>
@@ -85,13 +97,13 @@ import { InputComponent } from '../../shared/components/form/input/input.compone
                     transition-all p-5 cursor-pointer group"
              (click)="openCategory(cat)">
           <div class="w-11 h-11 rounded-[var(--radius-lg)] flex items-center justify-center mb-4" [class]="cat.iconBg">
-            <lucide-angular [name]="cat.icon" [size]="20" color="currentColor" [class]="cat.iconColor" />
+            <svg [lucideIcon]="cat.icon" [size]="20" color="currentColor" [class]="cat.iconColor" />
           </div>
           <h3 class="text-sm font-semibold text-[var(--color-text-primary)] mb-1">{{ cat.title }}</h3>
           <p class="text-xs text-[var(--color-text-muted)] mb-3">{{ cat.description }}</p>
           <div class="flex items-center justify-between">
             <span class="text-xs text-[var(--color-text-muted)]">{{ cat.articleCount }} articles</span>
-            <lucide-angular name="chevron-right" [size]="14" color="currentColor" class="text-[var(--color-text-muted)] group-hover:text-[var(--color-primary-600)] transition-colors" />
+            <svg lucideChevronRight [size]="14" color="currentColor" class="text-[var(--color-text-muted)] group-hover:text-[var(--color-primary-600)] transition-colors" />
           </div>
         </div>
       }
@@ -121,7 +133,7 @@ import { InputComponent } from '../../shared/components/form/input/input.compone
                     <div class="flex items-center gap-3 mt-0.5">
                       <span class="text-[10px] text-[var(--color-primary-600)] bg-[var(--color-primary-50)] dark:bg-[var(--color-primary-900)]/20 px-1.5 py-0.5 rounded-full">{{ article.category }}</span>
                       <span class="text-xs text-[var(--color-text-muted)] flex items-center gap-1">
-                        <lucide-angular name="clock" [size]="10" color="currentColor" />
+                        <svg lucideClock [size]="10" color="currentColor" />
                         {{ article.readTime }}
                       </span>
                     </div>
@@ -129,10 +141,10 @@ import { InputComponent } from '../../shared/components/form/input/input.compone
                 </div>
                 <div class="flex items-center gap-3 shrink-0 ml-3">
                   <div class="flex items-center gap-1 text-xs text-[var(--color-text-muted)]">
-                    <lucide-angular name="thumbs-up" [size]="10" color="currentColor" />
+                    <svg lucideThumbsUp [size]="10" color="currentColor" />
                     {{ article.helpful }}%
                   </div>
-                  <lucide-angular name="chevron-right" [size]="14" color="currentColor" class="text-[var(--color-text-muted)]" />
+                  <svg lucideChevronRight [size]="14" color="currentColor" class="text-[var(--color-text-muted)]" />
                 </div>
               </div>
             }
@@ -166,9 +178,9 @@ import { InputComponent } from '../../shared/components/form/input/input.compone
             @for (link of quickLinks; track link.label) {
               <a class="flex items-center gap-2.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-primary-600)] transition-colors cursor-pointer group"
                  (click)="openLink(link)">
-                <lucide-angular [name]="link.icon" [size]="14" color="currentColor" class="text-[var(--color-text-muted)] group-hover:text-[var(--color-primary-600)] transition-colors shrink-0" />
+                <svg [lucideIcon]="link.icon" [size]="14" color="currentColor" class="text-[var(--color-text-muted)] group-hover:text-[var(--color-primary-600)] transition-colors shrink-0" />
                 <span>{{ link.label }}</span>
-                <lucide-angular name="external-link" [size]="10" color="currentColor" class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+                <svg lucideExternalLink [size]="10" color="currentColor" class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
               </a>
             }
           </div>
@@ -188,7 +200,7 @@ import { InputComponent } from '../../shared/components/form/input/input.compone
               <div class="flex items-center justify-between">
                 <span class="text-xs text-[var(--color-text-secondary)]">{{ service.name }}</span>
                 <div class="flex items-center gap-1.5">
-                  <lucide-angular name="check-circle" [size]="12" color="currentColor" class="text-emerald-500" />
+                  <svg lucideCheckCircle [size]="12" color="currentColor" class="text-emerald-500" />
                   <span class="text-xs text-emerald-600">{{ service.uptime }}</span>
                 </div>
               </div>
@@ -206,21 +218,21 @@ import { InputComponent } from '../../shared/components/form/input/input.compone
           <p class="text-xs text-[var(--color-text-muted)] mb-4">Our support team is available 24/7 to assist you.</p>
           <div class="space-y-2 mb-4">
             <div class="flex items-center gap-2 text-xs text-[var(--color-text-secondary)]">
-              <lucide-angular name="clock" [size]="12" color="currentColor" class="text-[var(--color-primary-600)]" />
+              <svg lucideClock [size]="12" color="currentColor" class="text-[var(--color-primary-600)]" />
               <span>Avg. response: <strong class="text-[var(--color-text-primary)]">under 2 hours</strong></span>
             </div>
             <div class="flex items-center gap-2 text-xs text-[var(--color-text-secondary)]">
-              <lucide-angular name="star" [size]="12" color="currentColor" class="text-amber-500" />
+              <svg lucideStar [size]="12" color="currentColor" class="text-amber-500" />
               <span>Customer satisfaction: <strong class="text-[var(--color-text-primary)]">98.4%</strong></span>
             </div>
           </div>
           <div class="space-y-2">
             <ui-button variant="primary" [fullWidth]="true" size="sm" (click)="contactSupport('chat')">
-              <lucide-angular prefix name="message-circle" [size]="14" color="currentColor" />
+              <svg lucideMessageCircle prefix [size]="14" color="currentColor" />
               Live Chat
             </ui-button>
             <ui-button variant="outline" [fullWidth]="true" size="sm" (click)="contactSupport('email')">
-              <lucide-angular prefix name="mail" [size]="14" color="currentColor" />
+              <svg lucideMail prefix [size]="14" color="currentColor" />
               Email Support
             </ui-button>
           </div>

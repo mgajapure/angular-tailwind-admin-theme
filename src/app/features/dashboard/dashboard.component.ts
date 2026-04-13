@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-import { LucideAngularModule, Download, Plus, DollarSign, ShoppingCart, Users, Activity, ChevronRight } from 'lucide-angular';
+import {
+  LucideDownload, LucidePlus, LucideDollarSign, LucideShoppingCart,
+  LucideUsers, LucideActivity, LucideChevronRight
+} from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
@@ -19,7 +22,8 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
     DecimalPipe,
     StatCardComponent, SkeletonComponent, BadgeComponent,
     ButtonComponent, ProgressComponent, AvatarComponent,
-    LucideAngularModule.pick({ Download, Plus, DollarSign, ShoppingCart, Users, Activity, ChevronRight }),
+    LucideDownload, LucidePlus, LucideDollarSign, LucideShoppingCart,
+    LucideUsers, LucideActivity, LucideChevronRight,
   ],
   template: `
     <!-- Page header -->
@@ -34,11 +38,11 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
       </div>
       <div class="flex items-center gap-2.5">
         <ui-button variant="outline">
-          <lucide-angular prefix name="download" [size]="14" color="currentColor" />
+          <svg lucideDownload prefix [size]="14" color="currentColor" />
           Export
         </ui-button>
         <ui-button variant="primary" (click)="onNewReport()">
-          <lucide-angular prefix name="plus" [size]="14" color="currentColor" />
+          <svg lucidePlus prefix [size]="14" color="currentColor" />
           New Report
         </ui-button>
       </div>
@@ -54,16 +58,16 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
     } @else {
       <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
         <ui-stat-card label="Total Revenue" [value]="84529" prefix="$" [trend]="12.5" [sparkline]="[30,45,28,60,52,75,68,82]" color="primary">
-          <lucide-angular stat-icon name="dollar-sign" [size]="18" color="currentColor" />
+          <svg lucideDollarSign stat-icon [size]="18" color="currentColor" />
         </ui-stat-card>
         <ui-stat-card label="New Orders" [value]="1284" [trend]="8.2" [sparkline]="[20,35,25,50,45,60,55,70]" color="success">
-          <lucide-angular stat-icon name="shopping-cart" [size]="18" color="currentColor" />
+          <svg lucideShoppingCart stat-icon [size]="18" color="currentColor" />
         </ui-stat-card>
         <ui-stat-card label="Active Users" [value]="9742" [trend]="-2.4" [sparkline]="[65,55,70,48,60,52,58,50]" color="warning">
-          <lucide-angular stat-icon name="users" [size]="18" color="currentColor" />
+          <svg lucideUsers stat-icon [size]="18" color="currentColor" />
         </ui-stat-card>
         <ui-stat-card label="Conversion Rate" [value]="3.6" suffix="%" [trend]="1.1" [sparkline]="[2.8,3.1,2.9,3.4,3.2,3.5,3.4,3.6]" color="info">
-          <lucide-angular stat-icon name="activity" [size]="18" color="currentColor" />
+          <svg lucideActivity stat-icon [size]="18" color="currentColor" />
         </ui-stat-card>
       </div>
     }
@@ -159,7 +163,7 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
           <h3 class="text-base font-semibold text-[var(--color-text-primary)]">Recent Transactions</h3>
           <ui-button variant="ghost" size="sm">
             View all
-            <lucide-angular suffix name="chevron-right" [size]="12" color="currentColor" />
+            <svg lucideChevronRight suffix [size]="12" color="currentColor" />
           </ui-button>
         </div>
 

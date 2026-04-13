@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ToastService, Toast } from '../../../core/services/toast.service';
-import { LucideAngularModule, Check, X, AlertTriangle, Info } from 'lucide-angular';
+import { LucideCheck, LucideX, LucideAlertTriangle, LucideInfo } from '@lucide/angular';
 
 @Component({
   selector: 'app-toast-stack',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LucideAngularModule.pick({ Check, X, AlertTriangle, Info })],
+  imports: [LucideCheck, LucideX, LucideAlertTriangle, LucideInfo],
   template: `
     <div
       class="fixed bottom-4 right-4 z-[200] flex flex-col gap-2 w-[360px] max-w-[calc(100vw-2rem)]"
@@ -25,16 +25,16 @@ import { LucideAngularModule, Check, X, AlertTriangle, Info } from 'lucide-angul
           <div [class]="iconWrapperClass(toast)" class="shrink-0 w-8 h-8 rounded-full flex items-center justify-center">
             @switch (toast.type) {
               @case ('success') {
-                <lucide-angular name="check" [size]="14" color="currentColor" [strokeWidth]="2.5" />
+                <svg lucideCheck [size]="14" color="currentColor" [strokeWidth]="2.5" />
               }
               @case ('error') {
-                <lucide-angular name="x" [size]="14" color="currentColor" [strokeWidth]="2.5" />
+                <svg lucideX [size]="14" color="currentColor" [strokeWidth]="2.5" />
               }
               @case ('warning') {
-                <lucide-angular name="alert-triangle" [size]="14" color="currentColor" [strokeWidth]="2.5" />
+                <svg lucideAlertTriangle [size]="14" color="currentColor" [strokeWidth]="2.5" />
               }
               @default {
-                <lucide-angular name="info" [size]="14" color="currentColor" [strokeWidth]="2.5" />
+                <svg lucideInfo [size]="14" color="currentColor" [strokeWidth]="2.5" />
               }
             }
           </div>
@@ -60,7 +60,7 @@ import { LucideAngularModule, Check, X, AlertTriangle, Info } from 'lucide-angul
             class="shrink-0 p-1 rounded text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]
                    hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
             aria-label="Dismiss">
-            <lucide-angular name="x" [size]="12" color="currentColor" [strokeWidth]="3" />
+            <svg lucideX [size]="12" color="currentColor" [strokeWidth]="3" />
           </button>
         </div>
       }

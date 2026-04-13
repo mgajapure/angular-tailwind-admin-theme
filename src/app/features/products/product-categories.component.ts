@@ -2,9 +2,10 @@ import {
   ChangeDetectionStrategy, Component, OnInit, computed, inject, signal
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TitleCasePipe } from '@angular/common';
 import {
-  LucideAngularModule, Plus, Search, Edit2, Trash2, Tag, FolderTree, GripVertical
-} from 'lucide-angular';
+  LucidePlus, LucideSearch, LucideEdit2, LucideTrash2, LucideTag, LucideFolderTree, LucideGripVertical
+} from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { ToastService } from '../../core/services/toast.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
@@ -29,9 +30,9 @@ interface Category {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule,
+    FormsModule, TitleCasePipe,
     ButtonComponent, InputComponent, BadgeComponent, ModalComponent, EmptyStateComponent,
-    LucideAngularModule.pick({ Plus, Search, Edit2, Trash2, Tag, FolderTree, GripVertical }),
+    LucidePlus, LucideSearch, LucideEdit2, LucideTrash2, LucideTag, LucideFolderTree, LucideGripVertical,
   ],
   template: `
     <!-- Header -->
@@ -41,7 +42,7 @@ interface Category {
         <p class="text-sm text-[var(--color-text-secondary)] mt-0.5">Organise your products into categories</p>
       </div>
       <ui-button variant="primary" (click)="openModal()">
-        <lucide-angular prefix name="plus" [size]="14" color="currentColor" />
+        <svg lucidePlus prefix [size]="14" color="currentColor" />
         Add Category
       </ui-button>
     </div>
@@ -50,7 +51,7 @@ interface Category {
     <div class="grid grid-cols-3 gap-4 mb-6">
       <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-4 flex items-center gap-3">
         <div class="w-9 h-9 rounded-[var(--radius)] bg-[var(--color-primary-50)] dark:bg-[var(--color-primary-900)]/20 flex items-center justify-center">
-          <lucide-angular name="folder-tree" [size]="16" color="currentColor" class="text-[var(--color-primary-600)]" />
+          <svg lucideFolderTree [size]="16" color="currentColor" class="text-[var(--color-primary-600)]" />
         </div>
         <div>
           <div class="text-xl font-bold text-[var(--color-text-primary)]">{{ categories().length }}</div>
@@ -59,7 +60,7 @@ interface Category {
       </div>
       <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-4 flex items-center gap-3">
         <div class="w-9 h-9 rounded-[var(--radius)] bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
-          <lucide-angular name="tag" [size]="16" color="currentColor" class="text-emerald-600" />
+          <svg lucideTag [size]="16" color="currentColor" class="text-emerald-600" />
         </div>
         <div>
           <div class="text-xl font-bold text-[var(--color-text-primary)]">{{ activeCount() }}</div>
@@ -68,7 +69,7 @@ interface Category {
       </div>
       <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-4 flex items-center gap-3">
         <div class="w-9 h-9 rounded-[var(--radius)] bg-[var(--color-primary-50)] dark:bg-[var(--color-primary-900)]/20 flex items-center justify-center">
-          <lucide-angular name="tag" [size]="16" color="currentColor" class="text-[var(--color-primary-600)]" />
+          <svg lucideTag [size]="16" color="currentColor" class="text-[var(--color-primary-600)]" />
         </div>
         <div>
           <div class="text-xl font-bold text-[var(--color-text-primary)]">{{ totalProducts() }}</div>
@@ -80,7 +81,7 @@ interface Category {
     <!-- Search -->
     <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-4 mb-5">
       <div class="relative max-w-md">
-        <lucide-angular name="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none" [size]="14" color="currentColor" />
+        <svg lucideSearch class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none" [size]="14" color="currentColor" />
         <input [(ngModel)]="searchQuery" placeholder="Search categories…"
           class="w-full pl-9 pr-4 py-2 text-sm rounded-[var(--radius)] border border-[var(--color-border)]
                  bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]
@@ -102,7 +103,7 @@ interface Category {
               <div class="flex items-start justify-between mb-3">
                 <div class="flex items-center gap-3">
                   <div class="w-9 h-9 rounded-[var(--radius)] flex items-center justify-center" [style.background]="cat.color + '20'">
-                    <lucide-angular name="tag" [size]="16" color="currentColor" [style.color]="cat.color" />
+                    <svg lucideTag [size]="16" color="currentColor" [style.color]="cat.color" />
                   </div>
                   <div>
                     <h3 class="text-sm font-semibold text-[var(--color-text-primary)]">{{ cat.name }}</h3>
@@ -120,16 +121,16 @@ interface Category {
 
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-1.5">
-                  <lucide-angular name="tag" [size]="12" color="currentColor" class="text-[var(--color-text-muted)]" />
+                  <svg lucideTag [size]="12" color="currentColor" class="text-[var(--color-text-muted)]" />
                   <span class="text-sm font-medium text-[var(--color-text-primary)]">{{ cat.productCount }}</span>
                   <span class="text-xs text-[var(--color-text-muted)]">products</span>
                 </div>
                 <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <ui-button variant="ghost" size="xs" (click)="editCategory(cat)">
-                    <lucide-angular name="edit-2" [size]="12" color="currentColor" />
+                    <svg lucideEdit2 [size]="12" color="currentColor" />
                   </ui-button>
                   <ui-button variant="ghost" size="xs" (click)="deleteCategory(cat)">
-                    <lucide-angular name="trash-2" [size]="12" color="currentColor" class="text-red-500" />
+                    <svg lucideTrash2 [size]="12" color="currentColor" class="text-red-500" />
                   </ui-button>
                 </div>
               </div>
@@ -145,7 +146,7 @@ interface Category {
                  transition-colors group cursor-pointer">
           <div class="w-10 h-10 rounded-full bg-[var(--color-neutral-100)] dark:bg-[var(--color-bg-elevated)]
                       flex items-center justify-center group-hover:bg-[var(--color-primary-100)] dark:group-hover:bg-[var(--color-primary-900)]/20 transition-colors">
-            <lucide-angular name="plus" [size]="20" color="currentColor" class="text-[var(--color-text-muted)] group-hover:text-[var(--color-primary-600)] transition-colors" />
+            <svg lucidePlus [size]="20" color="currentColor" class="text-[var(--color-text-muted)] group-hover:text-[var(--color-primary-600)] transition-colors" />
           </div>
           <span class="text-sm font-medium text-[var(--color-text-muted)] group-hover:text-[var(--color-primary-600)] transition-colors">Add Category</span>
         </button>

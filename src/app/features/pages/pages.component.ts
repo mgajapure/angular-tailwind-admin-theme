@@ -2,10 +2,11 @@ import {
   ChangeDetectionStrategy, Component, OnInit, computed, inject, signal
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DecimalPipe } from '@angular/common';
 import {
-  LucideAngularModule, Plus, Search, Edit2, Trash2, Eye, Globe,
-  FileText, Clock, Calendar, CheckCircle, AlertCircle, Copy, MoreHorizontal
-} from 'lucide-angular';
+  LucidePlus, LucideSearch, LucideEdit2, LucideTrash2, LucideEye, LucideGlobe,
+  LucideFileText, LucideClock, LucideCalendar, LucideCheckCircle, LucideAlertCircle, LucideCopy, LucideMoreHorizontal
+} from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { ToastService } from '../../core/services/toast.service';
 import { BadgeComponent, BadgeVariant } from '../../shared/components/badge/badge.component';
@@ -37,11 +38,12 @@ interface Page {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule,
+    FormsModule, DecimalPipe,
     BadgeComponent, ButtonComponent, AvatarComponent,
     SkeletonComponent, EmptyStateComponent, PaginationComponent, ModalComponent,
     InputComponent, ToggleComponent,
-    LucideAngularModule.pick({ Plus, Search, Edit2, Trash2, Eye, Globe, FileText, Clock, Calendar, CheckCircle, AlertCircle, Copy, MoreHorizontal }),
+    LucidePlus, LucideSearch, LucideEdit2, LucideTrash2, LucideEye, LucideGlobe,
+    LucideFileText, LucideClock, LucideCalendar, LucideCheckCircle, LucideAlertCircle, LucideCopy, LucideMoreHorizontal,
   ],
   template: `
     <!-- Header -->
@@ -51,7 +53,7 @@ interface Page {
         <p class="text-sm text-[var(--color-text-secondary)] mt-0.5">Manage your website's content pages</p>
       </div>
       <ui-button variant="primary" (click)="openModal()">
-        <lucide-angular prefix name="plus" [size]="14" color="currentColor" />
+        <svg lucidePlus prefix [size]="14" color="currentColor" />
         New Page
       </ui-button>
     </div>
@@ -70,7 +72,7 @@ interface Page {
     <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-4 mb-5">
       <div class="flex flex-wrap items-center gap-3">
         <div class="relative flex-1 min-w-52">
-          <lucide-angular name="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none" [size]="14" color="currentColor" />
+          <svg lucideSearch class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none" [size]="14" color="currentColor" />
           <input [(ngModel)]="searchQuery" placeholder="Search pages…"
             class="w-full pl-9 pr-4 py-2 text-sm rounded-[var(--radius)] border border-[var(--color-border)]
                    bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]
@@ -131,7 +133,7 @@ interface Page {
                   <td class="px-6 py-4">
                     <div class="flex items-center gap-3">
                       <div class="w-8 h-8 rounded-[var(--radius)] bg-[var(--color-neutral-100)] dark:bg-[var(--color-bg-elevated)] flex items-center justify-center shrink-0">
-                        <lucide-angular name="file-text" [size]="14" color="currentColor" class="text-[var(--color-text-muted)]" />
+                        <svg lucideFileText [size]="14" color="currentColor" class="text-[var(--color-text-muted)]" />
                       </div>
                       <div>
                         <div class="flex items-center gap-2">
@@ -149,7 +151,7 @@ interface Page {
                       <ui-badge [variant]="statusVariant(page.status)" size="sm" [dot]="true">{{ page.status | titlecase }}</ui-badge>
                       @if (page.scheduledAt) {
                         <div class="text-[10px] text-[var(--color-text-muted)] mt-0.5 flex items-center gap-1">
-                          <lucide-angular name="calendar" [size]="9" color="currentColor" />
+                          <svg lucideCalendar [size]="9" color="currentColor" />
                           {{ page.scheduledAt }}
                         </div>
                       }
@@ -169,16 +171,16 @@ interface Page {
                   <td class="px-6 py-4">
                     <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <ui-button variant="ghost" size="xs" (click)="previewPage(page)" title="Preview">
-                        <lucide-angular name="eye" [size]="12" color="currentColor" />
+                        <svg lucideEye [size]="12" color="currentColor" />
                       </ui-button>
                       <ui-button variant="ghost" size="xs" (click)="duplicatePage(page)" title="Duplicate">
-                        <lucide-angular name="copy" [size]="12" color="currentColor" />
+                        <svg lucideCopy [size]="12" color="currentColor" />
                       </ui-button>
                       <ui-button variant="ghost" size="xs" (click)="editPage(page)" title="Edit">
-                        <lucide-angular name="edit-2" [size]="12" color="currentColor" />
+                        <svg lucideEdit2 [size]="12" color="currentColor" />
                       </ui-button>
                       <ui-button variant="ghost" size="xs" (click)="deletePage(page)" title="Delete">
-                        <lucide-angular name="trash-2" [size]="12" color="currentColor" class="text-red-500" />
+                        <svg lucideTrash2 [size]="12" color="currentColor" class="text-red-500" />
                       </ui-button>
                     </div>
                   </td>

@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import {
-  LucideAngularModule,
-  Zap, ChevronDown, ChevronsUpDown,
-  LayoutDashboard, BarChart3, Users, Package, ShoppingCart,
-  FileText, File, Image, Settings, HelpCircle, List, Plus, Tag
-} from 'lucide-angular';
+  LucideZap, LucideChevronDown, LucideChevronsUpDown,
+  LucideDynamicIcon, provideLucideIcons,
+  LucideLayoutDashboard, LucideBarChart3, LucideUsers, LucidePackage,
+  LucideShoppingCart, LucideFileText, LucideFile, LucideImage,
+  LucideSettings, LucideHelpCircle, LucideList, LucidePlus, LucideTag
+} from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ConfigService } from '../../core/services/config.service';
@@ -17,13 +18,16 @@ import { navigation } from '../../config/navigation.config';
   selector: 'app-sidebar',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    provideLucideIcons(
+      LucideLayoutDashboard, LucideBarChart3, LucideUsers, LucidePackage,
+      LucideShoppingCart, LucideFileText, LucideFile, LucideImage,
+      LucideSettings, LucideHelpCircle, LucideList, LucidePlus, LucideTag
+    )
+  ],
   imports: [
     RouterLink, RouterLinkActive, AvatarComponent, BadgeComponent,
-    LucideAngularModule.pick({
-      Zap, ChevronDown, ChevronsUpDown,
-      LayoutDashboard, BarChart3, Users, Package, ShoppingCart,
-      FileText, File, Image, Settings, HelpCircle, List, Plus, Tag
-    }),
+    LucideZap, LucideChevronDown, LucideChevronsUpDown, LucideDynamicIcon,
   ],
   template: `
     <!-- Mobile overlay backdrop -->
@@ -44,7 +48,7 @@ import { navigation } from '../../config/navigation.config';
                   border-b border-[var(--color-sidebar-border)]">
         <div class="w-8 h-8 rounded-[var(--radius)] bg-[var(--color-primary-600)]
                     flex items-center justify-center shrink-0">
-          <lucide-angular name="zap" [size]="16" color="currentColor" class="text-white" [strokeWidth]="2.5" />
+          <svg lucideZap [size]="16" color="currentColor" class="text-white" [strokeWidth]="2.5" />
         </div>
         @if (!layout.isMini()) {
           <div class="overflow-hidden">
@@ -76,7 +80,7 @@ import { navigation } from '../../config/navigation.config';
                   (click)="layout.isMobile() && layout.closeMobile()"
                   [title]="layout.isMini() ? item.label : ''"
                   class="sidebar-item group">
-                  <lucide-angular class="sidebar-icon" [name]="item.icon" [size]="18" color="currentColor" [strokeWidth]="1.75" />
+                  <svg [lucideIcon]="item.icon" class="sidebar-icon" [size]="18" color="currentColor" [strokeWidth]="1.75" />
                   @if (!layout.isMini()) {
                     <span class="flex-1 text-sm font-medium truncate">{{ item.label }}</span>
                     @if (item.badge) {
@@ -94,10 +98,10 @@ import { navigation } from '../../config/navigation.config';
                     (click)="toggleGroup(item.id)"
                     [title]="layout.isMini() ? item.label : ''"
                     class="sidebar-item w-full group">
-                    <lucide-angular class="sidebar-icon" [name]="item.icon" [size]="18" color="currentColor" [strokeWidth]="1.75" />
+                    <svg [lucideIcon]="item.icon" class="sidebar-icon" [size]="18" color="currentColor" [strokeWidth]="1.75" />
                     @if (!layout.isMini()) {
                       <span class="flex-1 text-sm font-medium text-left truncate">{{ item.label }}</span>
-                      <lucide-angular name="chevron-down"
+                      <svg lucideChevronDown
                         class="text-[var(--color-sidebar-text)] transition-transform duration-200 shrink-0"
                         [class.rotate-180]="expandedGroups().has(item.id)"
                         [size]="14" color="currentColor" />
@@ -133,7 +137,7 @@ import { navigation } from '../../config/navigation.config';
               <div class="text-sm font-medium text-white truncate">{{ auth.user()?.name }}</div>
               <div class="text-xs text-[var(--color-sidebar-text)] truncate">{{ auth.user()?.email }}</div>
             </div>
-            <lucide-angular name="chevrons-up-down" [size]="14" color="currentColor" class="text-[var(--color-sidebar-text)] shrink-0" />
+            <svg lucideChevronsUpDown [size]="14" color="currentColor" class="text-[var(--color-sidebar-text)] shrink-0" />
           }
         </div>
       </div>

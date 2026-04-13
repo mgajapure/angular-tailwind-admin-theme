@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, HostListener, input, output } from '@angular/core';
-import { LucideAngularModule, X } from 'lucide-angular';
+import { LucideX } from '@lucide/angular';
 
 @Component({
   selector: 'ui-drawer',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LucideAngularModule.pick({ X })],
+  imports: [LucideX],
   template: `
     @if (open()) {
       <div class="fixed inset-0 z-[90] flex" [class]="positionClass()">
@@ -28,7 +28,7 @@ import { LucideAngularModule, X } from 'lucide-angular';
               class="p-2 rounded-[var(--radius)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]
                      hover:bg-[var(--color-neutral-100)] dark:hover:bg-[var(--color-bg-elevated)] transition-colors"
               aria-label="Close panel">
-              <lucide-angular name="x" [size]="16" color="currentColor" [strokeWidth]="2.5" />
+              <svg lucideX [size]="16" color="currentColor" [strokeWidth]="2.5" />
             </button>
           </div>
 

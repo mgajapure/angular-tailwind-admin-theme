@@ -2,12 +2,13 @@ import {
   ChangeDetectionStrategy, Component, OnInit, computed, inject, signal
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, TitleCasePipe } from '@angular/common';
 import {
-  LucideAngularModule, Search, Download, Eye, Package, Truck,
-  CheckCircle, XCircle, Clock, RefreshCw, ShoppingCart, DollarSign,
-  TrendingUp, ChevronRight, MapPin, CreditCard, X
-} from 'lucide-angular';
+  LucideSearch, LucideDownload, LucideEye, LucidePackage, LucideTruck,
+  LucideMapPin, LucideCreditCard,
+  LucideShoppingCart, LucideClock, LucideDollarSign, LucideCheckCircle,
+  LucideDynamicIcon, provideLucideIcons,
+} from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { ToastService } from '../../core/services/toast.service';
 import { BadgeComponent, BadgeVariant } from '../../shared/components/badge/badge.component';
@@ -45,11 +46,15 @@ interface Order {
   selector: 'app-orders',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    provideLucideIcons(LucideShoppingCart, LucideClock, LucideTruck, LucideDollarSign, LucideCheckCircle),
+  ],
   imports: [
-    FormsModule, CurrencyPipe,
+    FormsModule, CurrencyPipe, TitleCasePipe,
     BadgeComponent, ButtonComponent, AvatarComponent,
     SkeletonComponent, EmptyStateComponent, PaginationComponent, DrawerComponent, ProgressComponent,
-    LucideAngularModule.pick({ Search, Download, Eye, Package, Truck, CheckCircle, XCircle, Clock, RefreshCw, ShoppingCart, DollarSign, TrendingUp, ChevronRight, MapPin, CreditCard, X }),
+    LucideSearch, LucideDownload, LucideEye, LucidePackage, LucideTruck,
+    LucideMapPin, LucideCreditCard, LucideDynamicIcon,
   ],
   template: `
     <!-- Header -->
@@ -59,7 +64,7 @@ interface Order {
         <p class="text-sm text-[var(--color-text-secondary)] mt-0.5">Track and manage customer orders</p>
       </div>
       <ui-button variant="outline" size="sm" (click)="exportOrders()">
-        <lucide-angular prefix name="download" [size]="14" color="currentColor" />
+        <svg lucideDownload prefix [size]="14" color="currentColor" />
         Export
       </ui-button>
     </div>
@@ -71,7 +76,7 @@ interface Order {
           <div class="flex items-center justify-between mb-3">
             <div class="text-xs text-[var(--color-text-muted)] font-medium">{{ stat.label }}</div>
             <div class="w-8 h-8 rounded-[var(--radius)] flex items-center justify-center" [class]="stat.iconBg">
-              <lucide-angular [name]="stat.icon" [size]="14" color="currentColor" [class]="stat.iconColor" />
+              <svg [lucideIcon]="stat.icon" [size]="14" color="currentColor" [class]="stat.iconColor" />
             </div>
           </div>
           <div class="text-2xl font-bold text-[var(--color-text-primary)]">{{ stat.value }}</div>
@@ -86,7 +91,7 @@ interface Order {
     <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-4 mb-5">
       <div class="flex flex-wrap items-center gap-3">
         <div class="relative flex-1 min-w-52">
-          <lucide-angular name="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none" [size]="14" color="currentColor" />
+          <svg lucideSearch class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none" [size]="14" color="currentColor" />
           <input [(ngModel)]="searchQuery" placeholder="Search orders or customers…"
             class="w-full pl-9 pr-4 py-2 text-sm rounded-[var(--radius)] border border-[var(--color-border)]
                    bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]
@@ -175,7 +180,7 @@ interface Order {
                   <td class="px-6 py-4">
                     <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <ui-button variant="ghost" size="xs" (click)="openDetail(order); $event.stopPropagation()">
-                        <lucide-angular name="eye" [size]="12" color="currentColor" />
+                        <svg lucideEye [size]="12" color="currentColor" />
                       </ui-button>
                     </div>
                   </td>
@@ -213,7 +218,7 @@ interface Order {
               <div class="flex-1 flex flex-col items-center">
                 <div class="w-7 h-7 rounded-full flex items-center justify-center z-10 transition-all"
                      [class]="isStepDone(order.fulfillmentStatus, step.key) ? 'bg-[var(--color-primary-600)] text-white' : 'bg-[var(--color-neutral-100)] dark:bg-[var(--color-bg-elevated)] text-[var(--color-text-muted)]'">
-                  <lucide-angular [name]="step.icon" [size]="14" color="currentColor" />
+                  <svg [lucideIcon]="step.icon" [size]="14" color="currentColor" />
                 </div>
                 <div class="text-[10px] text-[var(--color-text-muted)] mt-1 text-center">{{ step.label }}</div>
               </div>
@@ -235,7 +240,7 @@ interface Order {
             </div>
           </div>
           <div class="flex items-start gap-2 text-xs text-[var(--color-text-muted)]">
-            <lucide-angular name="map-pin" [size]="12" color="currentColor" class="mt-0.5 shrink-0" />
+            <svg lucideMapPin [size]="12" color="currentColor" class="mt-0.5 shrink-0" />
             <span>{{ order.shippingAddress }}</span>
           </div>
         </div>
@@ -247,7 +252,7 @@ interface Order {
             @for (item of order.items; track item.sku) {
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-[var(--radius)] bg-[var(--color-neutral-100)] dark:bg-[var(--color-bg-elevated)] flex items-center justify-center shrink-0">
-                  <lucide-angular name="package" [size]="16" color="currentColor" class="text-[var(--color-text-muted)]" />
+                  <svg lucidePackage [size]="16" color="currentColor" class="text-[var(--color-text-muted)]" />
                 </div>
                 <div class="flex-1 min-w-0">
                   <div class="text-sm font-medium text-[var(--color-text-primary)] truncate">{{ item.name }}</div>
@@ -276,7 +281,7 @@ interface Order {
 
         <!-- Payment -->
         <div class="flex items-center gap-2 text-xs text-[var(--color-text-muted)]">
-          <lucide-angular name="credit-card" [size]="12" color="currentColor" />
+          <svg lucideCreditCard [size]="12" color="currentColor" />
           <span>Paid via {{ order.paymentMethod }}</span>
         </div>
       }
@@ -284,7 +289,7 @@ interface Order {
       <div drawer-footer>
         <ui-button variant="outline" (click)="selectedOrder.set(null)">Close</ui-button>
         <ui-button variant="primary" (click)="markShipped()">
-          <lucide-angular prefix name="truck" [size]="14" color="currentColor" />
+          <svg lucideTruck prefix [size]="14" color="currentColor" />
           Mark as Shipped
         </ui-button>
       </div>

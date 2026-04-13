@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { NgClass } from '@angular/common';
-import { LucideAngularModule, Loader2 } from 'lucide-angular';
+import { LucideLoader2 } from '@lucide/angular';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline' | 'success';
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
@@ -9,7 +9,7 @@ export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
   selector: 'ui-button',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass, LucideAngularModule.pick({ Loader2 })],
+  imports: [NgClass, LucideLoader2],
   template: `
     <button
       [ngClass]="buttonClass()"
@@ -19,7 +19,7 @@ export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
       [attr.type]="type()">
 
       @if (loading()) {
-        <lucide-angular name="loader-2" class="animate-spin" [size]="iconSize()" color="currentColor" aria-hidden="true" />
+        <svg lucideLoader2 class="animate-spin" [size]="iconSize()" color="currentColor" aria-hidden="true" />
       }
 
       @if (!loading()) {

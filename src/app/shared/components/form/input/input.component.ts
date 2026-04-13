@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, AlertCircle } from 'lucide-angular';
+import { LucideAlertCircle } from '@lucide/angular';
 
 @Component({
   selector: 'ui-input',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, LucideAngularModule.pick({ AlertCircle })],
+  imports: [FormsModule, LucideAlertCircle],
   template: `
     <div class="flex flex-col gap-1.5">
       @if (label()) {
@@ -44,7 +44,7 @@ import { LucideAngularModule, AlertCircle } from 'lucide-angular';
 
       @if (error()) {
         <p [id]="inputId + '-desc'" class="text-xs text-red-500 flex items-center gap-1">
-          <lucide-angular name="alert-circle" [size]="12" color="currentColor" />
+          <svg lucideAlertCircle [size]="12" color="currentColor" />
           {{ error() }}
         </p>
       } @else if (hint()) {
