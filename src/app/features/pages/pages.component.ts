@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy, Component, OnInit, computed, inject, signal
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DecimalPipe } from '@angular/common';
+import {DecimalPipe, TitleCasePipe} from '@angular/common';
 import {
   LucidePlus, LucideSearch, LucideEdit2, LucideTrash2, LucideEye, LucideGlobe,
   LucideFileText, LucideClock, LucideCalendar, LucideCheckCircle, LucideAlertCircle, LucideCopy, LucideMoreHorizontal
@@ -23,7 +23,7 @@ interface Page {
   id: number;
   title: string;
   slug: string;
-  status: 'published' | 'draft' | 'scheduled' | 'archived';
+  status: 'published' | 'draft' | 'scheduled' | 'archived' | string;
   author: string;
   template: string;
   views: number;
@@ -43,7 +43,7 @@ interface Page {
     SkeletonComponent, EmptyStateComponent, PaginationComponent, ModalComponent,
     InputComponent, ToggleComponent,
     LucidePlus, LucideSearch, LucideEdit2, LucideTrash2, LucideEye, LucideGlobe,
-    LucideFileText, LucideClock, LucideCalendar, LucideCheckCircle, LucideAlertCircle, LucideCopy, LucideMoreHorizontal,
+    LucideFileText, LucideClock, LucideCalendar, LucideCheckCircle, LucideAlertCircle, LucideCopy, LucideMoreHorizontal, TitleCasePipe,
   ],
   template: `
     <!-- Header -->

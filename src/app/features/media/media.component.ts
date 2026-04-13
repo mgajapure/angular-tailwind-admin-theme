@@ -154,7 +154,7 @@ interface MediaFile {
               <svg lucideTrash2 prefix [size]="10" color="currentColor" class="text-red-500" />
               Delete
             </ui-button>
-            <ui-button variant="ghost" size="xs" (click)="selectedIds.set(new Set())">
+            <ui-button variant="ghost" size="xs" (click)="resetSelectedIds()">
               <svg lucideX [size]="10" color="currentColor" />
             </ui-button>
           </div>
@@ -394,5 +394,9 @@ export class MediaComponent implements OnInit {
     this.allFiles.update(files => files.filter(f => !this.selectedIds().has(f.id)));
     this.selectedIds.set(new Set());
     this.toast.success('Files deleted', `${count} files have been removed.`);
+  }
+
+  resetSelectedIds(){
+    this.selectedIds.set(new Set());
   }
 }

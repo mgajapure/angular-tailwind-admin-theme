@@ -3,7 +3,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { DecimalPipe, CurrencyPipe } from '@angular/common';
+import {DecimalPipe, CurrencyPipe, TitleCasePipe} from '@angular/common';
 import {
   LucidePlus, LucideSearch, LucideFilter, LucideDownload, LucideEdit2,
   LucideTrash2, LucidePackage, LucideAlertTriangle, LucideCheckCircle, LucideXCircle,
@@ -49,7 +49,7 @@ interface Product {
     DropdownComponent, DropdownItemComponent, DropdownSeparatorComponent,
     LucidePlus, LucideSearch, LucideFilter, LucideDownload, LucideEdit2,
     LucideTrash2, LucidePackage, LucideAlertTriangle, LucideCheckCircle, LucideXCircle,
-    LucideMoreVertical, LucideEye, LucideCopy, LucideArchive,
+    LucideMoreVertical, LucideEye, LucideCopy, LucideArchive, TitleCasePipe,
   ],
   template: `
     <!-- Header -->

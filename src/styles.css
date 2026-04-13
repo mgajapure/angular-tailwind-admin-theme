@@ -1,3 +1,5 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 @import "@angular/cdk/overlay-prebuilt.css";
 @import "./styles/tokens.css";
@@ -11,10 +13,12 @@
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 14px; /* Sets the global base */
 }
 
 body {
   font-family: var(--font-sans);
+  font-size: 1rem;
   background-color: var(--color-bg-base);
   color: var(--color-text-primary);
   margin: 0;
