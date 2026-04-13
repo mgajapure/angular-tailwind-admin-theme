@@ -34,7 +34,7 @@ export type DropdownPlacement = 'bottom-start' | 'bottom-end' | 'top-start' | 't
     <div class="relative inline-flex">
 
       <!-- Trigger wrapper — click toggles the panel -->
-      <div (click)="toggle($event)" class="inline-flex">
+      <div (click)="toggle()" class="inline-flex">
         <ng-content select="[trigger]" />
       </div>
 
@@ -76,8 +76,7 @@ export class DropdownComponent {
 
   private el = inject(ElementRef);
 
-  toggle(event: MouseEvent) {
-    event.stopPropagation();
+  toggle() {
     this.isOpen.update(v => !v);
   }
 
