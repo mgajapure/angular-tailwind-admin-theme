@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { LucideAngularModule, ChevronRight } from 'lucide-angular';
 import { Breadcrumb } from '../../../core/services/layout.service';
 
 @Component({
   selector: 'ui-breadcrumb',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink],
+  imports: [RouterLink, LucideAngularModule.pick({ ChevronRight })],
   template: `
     <nav aria-label="Breadcrumb">
       <ol class="flex items-center gap-1.5 text-sm">
@@ -21,10 +22,7 @@ import { Breadcrumb } from '../../../core/services/layout.service';
               } @else {
                 <span class="text-[var(--color-text-muted)]">{{ crumb.label }}</span>
               }
-              <svg class="text-[var(--color-text-muted)] shrink-0" width="14" height="14" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
+              <lucide-angular name="chevron-right" class="text-[var(--color-text-muted)] shrink-0" [size]="14" color="currentColor" />
             } @else {
               <span class="text-[var(--color-text-primary)] font-medium">{{ crumb.label }}</span>
             }

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { LucideAngularModule, ChevronDown } from 'lucide-angular';
 
 export interface AccordionItem {
   id: string;
@@ -11,6 +12,7 @@ export interface AccordionItem {
   selector: 'ui-accordion',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LucideAngularModule.pick({ ChevronDown })],
   template: `
     <div class="divide-y divide-[var(--color-border)] border border-[var(--color-border)] rounded-[var(--radius-lg)] overflow-hidden">
       @for (item of items(); track item.id) {
@@ -25,12 +27,10 @@ export interface AccordionItem {
                    dark:hover:bg-[var(--color-bg-elevated)] transition-colors
                    disabled:opacity-50 disabled:cursor-not-allowed">
             <span class="text-sm font-medium text-[var(--color-text-primary)]">{{ item.title }}</span>
-            <svg
-              class="w-4 h-4 text-[var(--color-text-muted)] transition-transform duration-200 shrink-0"
+            <lucide-angular name="chevron-down"
+              class="text-[var(--color-text-muted)] transition-transform duration-200 shrink-0"
               [class.rotate-180]="isOpen(item.id)"
-              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="m6 9 6 6 6-6"/>
-            </svg>
+              [size]="16" color="currentColor" />
           </button>
           @if (isOpen(item.id)) {
             <div

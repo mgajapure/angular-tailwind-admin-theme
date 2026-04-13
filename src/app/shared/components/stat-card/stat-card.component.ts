@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
+import { LucideAngularModule, TrendingUp, TrendingDown } from 'lucide-angular';
 
 @Component({
   selector: 'ui-stat-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, LucideAngularModule.pick({ TrendingUp, TrendingDown })],
   template: `
     <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)]
                 shadow-[var(--shadow-card)] p-5 hover:shadow-[var(--shadow-elevated)] transition-shadow group">
@@ -15,9 +16,7 @@ import { DecimalPipe } from '@angular/common';
         <span class="text-sm font-medium text-[var(--color-text-secondary)]">{{ label() }}</span>
         <div [class]="iconBgClass()"
              class="w-9 h-9 rounded-[var(--radius)] flex items-center justify-center shrink-0">
-          <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <ng-content select="[stat-icon]" />
-          </svg>
+          <ng-content select="[stat-icon]" />
         </div>
       </div>
 
@@ -30,14 +29,10 @@ import { DecimalPipe } from '@angular/common';
       @if (trend() !== 0) {
         <div class="flex items-center gap-1.5 mt-2">
           @if (trend() >= 0) {
-            <svg class="w-3.5 h-3.5 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M22 7 13.5 15.5 8.5 10.5 2 17M22 7h-7M22 7v7"/>
-            </svg>
+            <lucide-angular name="trending-up" [size]="14" color="currentColor" class="text-emerald-500" [strokeWidth]="2.5" />
             <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">+{{ trend() }}%</span>
           } @else {
-            <svg class="w-3.5 h-3.5 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M22 17 13.5 8.5 8.5 13.5 2 7M22 17h-7M22 17v-7"/>
-            </svg>
+            <lucide-angular name="trending-down" [size]="14" color="currentColor" class="text-red-500" [strokeWidth]="2.5" />
             <span class="text-xs font-semibold text-red-600 dark:text-red-400">{{ trend() }}%</span>
           }
           <span class="text-xs text-[var(--color-text-muted)]">{{ trendLabel() }}</span>

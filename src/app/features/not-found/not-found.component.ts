@@ -17,10 +17,14 @@ import { ButtonComponent } from '../../shared/components/button/button.component
         </p>
         <div class="flex items-center justify-center gap-3">
           <ui-button variant="primary" routerLink="/dashboard">Go to Dashboard</ui-button>
-          <ui-button variant="outline" onclick="history.back()">Go Back</ui-button>
+          <ui-button variant="outline" (click)="goBack()">Go Back</ui-button>
         </div>
       </div>
     </div>
   `
 })
-export class NotFoundComponent {}
+export class NotFoundComponent {
+  goBack() {
+    history.back();
+  }
+}

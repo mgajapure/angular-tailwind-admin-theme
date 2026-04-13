@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { LucideAngularModule, Plus, Search, Trash2 } from 'lucide-angular';
 import { TitleCasePipe } from '@angular/common';
 import { LayoutService } from '../../core/services/layout.service';
 import { ToastService } from '../../core/services/toast.service';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
-import { BadgeComponent } from '../../shared/components/badge/badge.component';
+import { BadgeComponent, BadgeVariant } from '../../shared/components/badge/badge.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { InputComponent } from '../../shared/components/form/input/input.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
@@ -32,6 +33,7 @@ interface User {
     AvatarComponent, BadgeComponent, ButtonComponent,
     InputComponent, SkeletonComponent, EmptyStateComponent,
     PaginationComponent, ModalComponent,
+    LucideAngularModule.pick({ Plus, Search, Trash2 }),
   ],
   template: `
     <!-- Page header -->
@@ -43,9 +45,7 @@ interface User {
         </p>
       </div>
       <ui-button variant="primary" (click)="openAddModal()">
-        <svg slot="prefix-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-        </svg>
+        <lucide-angular prefix name="plus" [size]="14" color="currentColor" />
         Add User
       </ui-button>
     </div>
@@ -57,10 +57,8 @@ interface User {
 
         <!-- Search -->
         <div class="relative flex-1 min-w-52">
-          <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none"
-               width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          </svg>
+          <lucide-angular name="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none"
+               [size]="14" color="currentColor" />
           <input
             [(ngModel)]="searchQuery"
             placeholder="Search users..."
@@ -159,9 +157,7 @@ interface User {
                     <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <ui-button variant="ghost" size="xs" (click)="editUser(user)">Edit</ui-button>
                       <ui-button variant="ghost" size="xs" (click)="deleteUser(user)">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-red-500">
-                          <polyline points="3 6 5 6 21 6"/><path d="m19 6-.867 12.142A2 2 0 0 1 16.138 20H7.862a2 2 0 0 1-1.995-1.858L5 6m5 0V4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2"/>
-                        </svg>
+                        <lucide-angular name="trash-2" [size]="12" color="currentColor" class="text-red-500" />
                       </ui-button>
                     </div>
                   </td>
@@ -260,8 +256,8 @@ export class UsersComponent implements OnInit {
     setTimeout(() => this.loading.set(false), 500);
   }
 
-  statusVariant(status: string): any {
-    return { active: 'success', inactive: 'neutral', pending: 'warning' }[status] || 'neutral';
+  statusVariant(status: string): BadgeVariant {
+    return ({ active: 'success', inactive: 'neutral', pending: 'warning' } as Record<string, BadgeVariant>)[status] ?? 'neutral';
   }
 
   clearFilters() { this.searchQuery = ''; this.roleFilter = ''; this.statusFilter = ''; this.currentPage.set(1); }
