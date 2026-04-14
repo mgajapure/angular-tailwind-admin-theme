@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, model, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { LucideZap, LucideAlertCircle } from '@lucide/angular';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
@@ -10,7 +11,7 @@ import { ToggleComponent } from '../../shared/components/form/toggle/toggle.comp
   selector: 'app-login',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, ButtonComponent, InputComponent, ToggleComponent],
+  imports: [FormsModule, ButtonComponent, InputComponent, ToggleComponent, LucideZap, LucideAlertCircle],
   template: `
     <div class="min-h-screen bg-[var(--color-bg-base)] flex">
 
@@ -25,9 +26,7 @@ import { ToggleComponent } from '../../shared/components/form/toggle/toggle.comp
         <!-- Logo -->
         <div class="relative flex items-center gap-3">
           <div class="w-10 h-10 rounded-[var(--radius)] bg-[var(--color-primary-600)] flex items-center justify-center">
-            <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>
-            </svg>
+            <svg lucideZap [size]="20" color="currentColor" class="text-white" [strokeWidth]="2.5" />
           </div>
           <span class="text-xl font-bold text-white">AdminKit</span>
         </div>
@@ -65,9 +64,7 @@ import { ToggleComponent } from '../../shared/components/form/toggle/toggle.comp
           <!-- Mobile logo -->
           <div class="lg:hidden flex items-center gap-3 mb-8">
             <div class="w-8 h-8 rounded-[var(--radius)] bg-[var(--color-primary-600)] flex items-center justify-center">
-              <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>
-              </svg>
+              <svg lucideZap [size]="16" color="currentColor" class="text-white" [strokeWidth]="2.5" />
             </div>
             <span class="text-lg font-bold text-[var(--color-text-primary)]">AdminKit</span>
           </div>
@@ -78,9 +75,7 @@ import { ToggleComponent } from '../../shared/components/form/toggle/toggle.comp
           @if (error()) {
             <div class="mb-5 p-3 rounded-[var(--radius)] bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/40
                         text-sm text-red-700 dark:text-red-400 flex items-center gap-2">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="shrink-0">
-                <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
-              </svg>
+              <svg lucideAlertCircle [size]="14" color="currentColor" class="shrink-0" />
               {{ error() }}
             </div>
           }

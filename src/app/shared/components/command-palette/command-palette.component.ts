@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, HostListener, computed, inject, sig
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { navigation } from '../../../config/navigation.config';
+import { LucideSearch, LucideAlignJustify, LucideChevronRight } from '@lucide/angular';
 
 interface CommandItem {
   id: string;
@@ -16,7 +17,7 @@ interface CommandItem {
   selector: 'app-command-palette',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule],
+  imports: [FormsModule, LucideSearch, LucideAlignJustify, LucideChevronRight],
   template: `
     @if (isOpen()) {
       <div class="fixed inset-0 z-[150] flex items-start justify-center pt-[15vh] px-4">
@@ -31,9 +32,7 @@ interface CommandItem {
 
           <!-- Search input -->
           <div class="flex items-center gap-3 px-4 py-3 border-b border-[var(--color-border)]">
-            <svg class="w-4 h-4 text-[var(--color-text-muted)] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-            </svg>
+            <svg lucideSearch class="text-[var(--color-text-muted)] shrink-0" [size]="16" color="currentColor" />
             <input
               #searchInput
               [(ngModel)]="query"
@@ -67,9 +66,7 @@ interface CommandItem {
                     class="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors">
                     <div class="w-7 h-7 rounded-[var(--radius-sm)] bg-[var(--color-neutral-100)]
                                 dark:bg-[var(--color-bg-elevated)] flex items-center justify-center shrink-0">
-                      <svg class="w-3.5 h-3.5 text-[var(--color-text-secondary)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 9h18M3 15h18"/>
-                      </svg>
+                      <svg lucideAlignJustify class="text-[var(--color-text-secondary)]" [size]="14" color="currentColor" />
                     </div>
                     <div class="flex-1 min-w-0">
                       <div class="text-sm font-medium text-[var(--color-text-primary)]">{{ item.label }}</div>
@@ -77,9 +74,7 @@ interface CommandItem {
                         <div class="text-xs text-[var(--color-text-muted)] truncate">{{ item.description }}</div>
                       }
                     </div>
-                    <svg class="w-3 h-3 text-[var(--color-text-muted)] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="m9 18 6-6-6-6"/>
-                    </svg>
+                    <svg lucideChevronRight class="text-[var(--color-text-muted)] shrink-0" [size]="12" color="currentColor" />
                   </button>
                 }
               </div>

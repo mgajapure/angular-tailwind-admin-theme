@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, model } from '@angular/core';
+import { LucideEye, LucideHome, LucideClock, LucideActivity } from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { StatCardComponent } from '../../shared/components/stat-card/stat-card.component';
 import { BadgeComponent } from '../../shared/components/badge/badge.component';
@@ -9,7 +10,7 @@ import { TabsComponent, Tab } from '../../shared/components/tabs/tabs.component'
   selector: 'app-analytics',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [StatCardComponent, BadgeComponent, ProgressComponent, TabsComponent],
+  imports: [StatCardComponent, BadgeComponent, ProgressComponent, TabsComponent, LucideEye, LucideHome, LucideClock, LucideActivity],
   template: `
     <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
       <div>
@@ -30,35 +31,23 @@ import { TabsComponent, Tab } from '../../shared/components/tabs/tabs.component'
     <!-- KPIs -->
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
       <ui-stat-card label="Page Views" [value]="248300" [trend]="18.3" [sparkline]="[40,55,45,70,60,80,72,90]" color="primary">
-        <svg slot="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7zm10-3a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
-        </svg>
-
+        <svg lucideEye stat-icon [size]="18" color="currentColor" />
       </ui-stat-card>
       <ui-stat-card label="Bounce Rate" [value]="34" suffix="%" [trend]="-5.2" trendLabel="improvement" [sparkline]="[55,50,48,42,45,38,36,34]" color="success">
-        <svg slot="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10"/>
-        </svg>
-
+        <svg lucideHome stat-icon [size]="18" color="currentColor" />
       </ui-stat-card>
       <ui-stat-card label="Avg. Session" [value]="4" suffix="m 32s" [trend]="12.1" [sparkline]="[2.1,2.8,3.2,3.5,3.8,4.1,4.3,4.5]" color="warning">
-        <svg slot="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-14v4l3 2"/>
-        </svg>
-
+        <svg lucideClock stat-icon [size]="18" color="currentColor" />
       </ui-stat-card>
       <ui-stat-card label="Goal Completion" [value]="68" suffix="%" [trend]="4.7" [sparkline]="[52,55,58,60,62,64,66,68]" color="info">
-        <svg slot="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-        </svg>
-
+        <svg lucideActivity stat-icon [size]="18" color="currentColor" />
       </ui-stat-card>
     </div>
 
     <!-- Tabs section -->
     <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)]
                 shadow-[var(--shadow-card)] p-6 mb-6">
-      <ui-tabs [tabs]="tabs" [(activeTab)]="activeTab" style="pill" />
+      <ui-tabs [tabs]="tabs" [(activeTab)]="activeTab" [style]="'pill'" />
 
       @if (activeTab() === 'traffic') {
         <div class="mt-6 space-y-4">
@@ -136,12 +125,12 @@ export class AnalyticsComponent implements OnInit {
     this.layout.setPage('Analytics', [{ label: 'Analytics' }]);
   }
 
-  trafficData = [
-    { source: 'Organic Search', visits: 102400, pct: 41, variant: 'primary' as const },
-    { source: 'Direct', visits: 68300, pct: 27, variant: 'success' as const },
-    { source: 'Social Media', visits: 45200, pct: 18, variant: 'warning' as const },
-    { source: 'Email', visits: 22500, pct: 9, variant: 'info' as const },
-    { source: 'Referral', visits: 12400, pct: 5, variant: 'neutral' as const },
+  trafficData: Array<{ source: string; visits: number; pct: number; variant: 'primary' | 'success' | 'warning' | 'danger' }> = [
+    { source: 'Organic Search', visits: 102400, pct: 41, variant: 'primary' },
+    { source: 'Direct', visits: 68300, pct: 27, variant: 'success' },
+    { source: 'Social Media', visits: 45200, pct: 18, variant: 'warning' },
+    { source: 'Email', visits: 22500, pct: 9, variant: 'primary' },
+    { source: 'Referral', visits: 12400, pct: 5, variant: 'danger' },
   ];
 
   topPages = [
@@ -158,7 +147,7 @@ export class AnalyticsComponent implements OnInit {
     { name: 'Tablet', emoji: '📟', pct: 8, variant: 'warning' as const },
   ];
 
-  getVariant(src: any){
+  getVariant(src: { variant: 'primary' | 'success' | 'warning' | 'danger' }): 'primary' | 'success' | 'warning' | 'danger' {
     return src.variant;
   }
 }

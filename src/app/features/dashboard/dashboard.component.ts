@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
+import {
+  LucideDownload, LucidePlus, LucideDollarSign, LucideShoppingCart,
+  LucideUsers, LucideActivity, LucideChevronRight
+} from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
@@ -18,6 +22,8 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
     DecimalPipe,
     StatCardComponent, SkeletonComponent, BadgeComponent,
     ButtonComponent, ProgressComponent, AvatarComponent,
+    LucideDownload, LucidePlus, LucideDollarSign, LucideShoppingCart,
+    LucideUsers, LucideActivity, LucideChevronRight,
   ],
   template: `
     <!-- Page header -->
@@ -32,15 +38,11 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
       </div>
       <div class="flex items-center gap-2.5">
         <ui-button variant="outline">
-          <svg slot="prefix-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-          </svg>
+          <svg lucideDownload prefix [size]="14" color="currentColor" />
           Export
         </ui-button>
         <ui-button variant="primary" (click)="onNewReport()">
-          <svg slot="prefix-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
+          <svg lucidePlus prefix [size]="14" color="currentColor" />
           New Report
         </ui-button>
       </div>
@@ -56,27 +58,16 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
     } @else {
       <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
         <ui-stat-card label="Total Revenue" [value]="84529" prefix="$" [trend]="12.5" [sparkline]="[30,45,28,60,52,75,68,82]" color="primary">
-          <svg slot="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-          </svg>
-
+          <svg lucideDollarSign stat-icon [size]="18" color="currentColor" />
         </ui-stat-card>
         <ui-stat-card label="New Orders" [value]="1284" [trend]="8.2" [sparkline]="[20,35,25,50,45,60,55,70]" color="success">
-          <svg slot="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/>
-          </svg>
-
+          <svg lucideShoppingCart stat-icon [size]="18" color="currentColor" />
         </ui-stat-card>
         <ui-stat-card label="Active Users" [value]="9742" [trend]="-2.4" [sparkline]="[65,55,70,48,60,52,58,50]" color="warning">
-          <svg slot="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm7-4a3 3 0 0 1 0 5.83M22 21v-2a4 4 0 0 0-3-3.87"/>
-          </svg>
-
+          <svg lucideUsers stat-icon [size]="18" color="currentColor" />
         </ui-stat-card>
         <ui-stat-card label="Conversion Rate" [value]="3.6" suffix="%" [trend]="1.1" [sparkline]="[2.8,3.1,2.9,3.4,3.2,3.5,3.4,3.6]" color="info">
-          <svg slot="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-          </svg>
+          <svg lucideActivity stat-icon [size]="18" color="currentColor" />
         </ui-stat-card>
       </div>
     }
@@ -172,9 +163,7 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
           <h3 class="text-base font-semibold text-[var(--color-text-primary)]">Recent Transactions</h3>
           <ui-button variant="ghost" size="sm">
             View all
-            <svg slot="suffix-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="m9 18 6-6-6-6"/>
-            </svg>
+            <svg lucideChevronRight suffix [size]="12" color="currentColor" />
           </ui-button>
         </div>
 
@@ -291,14 +280,14 @@ export class DashboardComponent implements OnInit {
     { id: 5, customer: 'Lisa Martinez', email: 'lisa@example.com', amount: '$680.00', status: 'Completed', statusVariant: 'success' as const, date: 'Dec 10' },
   ];
 
-  topProducts = [
-    { name: 'Pro Plan', pct: 87, sales: 1284, revenue: '$42,180', variant: 'primary'},
-    { name: 'Enterprise Suite', pct: 64, sales: 382, revenue: '$28,650', variant: 'success'},
-    { name: 'Starter Pack', pct: 49, sales: 2140, revenue: '$10,700', variant: 'warning'},
-    { name: 'Add-ons Bundle', pct: 32, sales: 891, revenue: '$8,910', variant: 'info'},
+  topProducts: Array<{ name: string; pct: number; sales: number; revenue: string; variant: 'primary' | 'success' | 'warning' | 'danger' }> = [
+    { name: 'Pro Plan', pct: 87, sales: 1284, revenue: '$42,180', variant: 'primary' },
+    { name: 'Enterprise Suite', pct: 64, sales: 382, revenue: '$28,650', variant: 'success' },
+    { name: 'Starter Pack', pct: 49, sales: 2140, revenue: '$10,700', variant: 'warning' },
+    { name: 'Add-ons Bundle', pct: 32, sales: 891, revenue: '$8,910', variant: 'danger' },
   ];
 
-  getVariant(p: any){
+  getVariant(p: { variant: 'primary' | 'success' | 'warning' | 'danger' }): 'primary' | 'success' | 'warning' | 'danger' {
     return p.variant;
   }
 

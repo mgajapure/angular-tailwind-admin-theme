@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { LucideX } from '@lucide/angular';
 
 export type BadgeVariant = 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'neutral';
 export type BadgeSize = 'sm' | 'md' | 'lg';
@@ -7,6 +8,7 @@ export type BadgeSize = 'sm' | 'md' | 'lg';
   selector: 'ui-badge',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LucideX],
   template: `
     <span [class]="badgeClass()">
       @if (dot()) {
@@ -18,9 +20,7 @@ export type BadgeSize = 'sm' | 'md' | 'lg';
           (click)="dismiss.emit()"
           class="ml-0.5 -mr-0.5 rounded-full hover:bg-black/10 p-0.5 transition-colors"
           aria-label="Dismiss">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-            <path d="M18 6 6 18M6 6l12 12"/>
-          </svg>
+          <svg lucideX [size]="10" color="currentColor" [strokeWidth]="3" />
         </button>
       }
     </span>
