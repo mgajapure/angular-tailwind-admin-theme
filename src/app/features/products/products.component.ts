@@ -3,25 +3,26 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import {DecimalPipe, CurrencyPipe, TitleCasePipe} from '@angular/common';
+import { CurrencyPipe, TitleCasePipe } from '@angular/common';
 import {
-  LucidePlus, LucideSearch, LucideFilter, LucideDownload, LucideEdit2,
+  LucidePlus, LucideSearch, LucideDownload, LucideEdit2,
   LucideTrash2, LucidePackage, LucideAlertTriangle, LucideCheckCircle, LucideXCircle,
-  LucideMoreVertical, LucideEye, LucideCopy, LucideArchive,
+  LucideMoreVertical, LucideEye, LucideCopy, LucideArchive, LucideGrid2x2, LucideList,
 } from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { ToastService } from '../../core/services/toast.service';
 import { BadgeComponent, BadgeVariant } from '../../shared/components/badge/badge.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
-import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
-import { StatCardComponent } from '../../shared/components/stat-card/stat-card.component';
 import { ModalComponent } from '../../shared/components/modal/modal.component';
 import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
 import { DropdownItemComponent } from '../../shared/components/dropdown/dropdown-item.component';
 import { DropdownSeparatorComponent } from '../../shared/components/dropdown/dropdown-separator.component';
+
+type StatusTab = 'all' | 'active' | 'draft' | 'archived';
+type ViewMode = 'table' | 'grid';
 
 interface Product {
   id: number;
@@ -42,14 +43,13 @@ interface Product {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule, RouterLink, DecimalPipe, CurrencyPipe,
-    BadgeComponent, ButtonComponent, AvatarComponent,
-    SkeletonComponent, EmptyStateComponent, PaginationComponent,
-    StatCardComponent, ModalComponent,
+    FormsModule, RouterLink, CurrencyPipe, TitleCasePipe,
+    BadgeComponent, ButtonComponent,
+    SkeletonComponent, EmptyStateComponent, PaginationComponent, ModalComponent,
     DropdownComponent, DropdownItemComponent, DropdownSeparatorComponent,
-    LucidePlus, LucideSearch, LucideFilter, LucideDownload, LucideEdit2,
+    LucidePlus, LucideSearch, LucideDownload, LucideEdit2,
     LucideTrash2, LucidePackage, LucideAlertTriangle, LucideCheckCircle, LucideXCircle,
-    LucideMoreVertical, LucideEye, LucideCopy, LucideArchive, TitleCasePipe,
+    LucideMoreVertical, LucideEye, LucideCopy, LucideArchive, LucideGrid2x2, LucideList,
   ],
   template: `
     <!-- Header -->
@@ -120,16 +120,38 @@ interface Product {
       </div>
     }
 
-    <!-- Filter bar -->
+    <!-- Filter Card -->
     <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-4 mb-5">
+
+      <!-- Status tabs (pill style) -->
+      <div class="flex items-center gap-1 bg-[var(--color-neutral-100)] dark:bg-[var(--color-bg-elevated)] rounded-[var(--radius)] p-1 mb-3">
+        @for (tab of statusTabs; track tab.value) {
+          <button (click)="setStatusTab(tab.value)"
+            class="px-3 py-1 text-xs font-medium rounded-[var(--radius-sm)] transition-colors"
+            [class.bg-white]="statusTab() === tab.value"
+            [class.dark:bg-[var(--color-bg-surface)]]="statusTab() === tab.value"
+            [class.shadow-[var(--shadow-card)]]="statusTab() === tab.value"
+            [class.text-[var(--color-text-primary)]]="statusTab() === tab.value"
+            [class.text-[var(--color-text-muted)]]="statusTab() !== tab.value"
+            [class.hover:text-[var(--color-text-primary)]]="statusTab() !== tab.value">
+            {{ tab.label }}
+            <span class="ml-1 text-[10px] text-[var(--color-text-muted)]">{{ tabCount(tab.value) }}</span>
+          </button>
+        }
+      </div>
+
+      <!-- Filters row -->
       <div class="flex flex-wrap items-center gap-3">
+        <!-- Search -->
         <div class="relative flex-1 min-w-52">
-          <svg lucideSearch class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none" [size]="14" color="currentColor" />
+          <svg lucideSearch class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none" [size]="13" color="currentColor" />
           <input [(ngModel)]="searchQuery" placeholder="Search products…"
-            class="w-full pl-9 pr-4 py-2 text-sm rounded-[var(--radius)] border border-[var(--color-border)]
+            class="w-full pl-8 pr-4 py-2 text-sm rounded-[var(--radius)] border border-[var(--color-border)]
                    bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]
                    focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-500)]/20 focus:border-[var(--color-primary-500)]" />
         </div>
+
+        <!-- Category filter -->
         <select [(ngModel)]="categoryFilter"
           class="px-3 py-2 text-sm rounded-[var(--radius)] border border-[var(--color-border)]
                  bg-[var(--color-bg-surface)] text-[var(--color-text-secondary)]
@@ -139,15 +161,8 @@ interface Product {
             <option [value]="cat">{{ cat }}</option>
           }
         </select>
-        <select [(ngModel)]="statusFilter"
-          class="px-3 py-2 text-sm rounded-[var(--radius)] border border-[var(--color-border)]
-                 bg-[var(--color-bg-surface)] text-[var(--color-text-secondary)]
-                 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-500)]/20 focus:border-[var(--color-primary-500)]">
-          <option value="">All Status</option>
-          <option value="active">Active</option>
-          <option value="draft">Draft</option>
-          <option value="archived">Archived</option>
-        </select>
+
+        <!-- Stock filter -->
         <select [(ngModel)]="stockFilter"
           class="px-3 py-2 text-sm rounded-[var(--radius)] border border-[var(--color-border)]
                  bg-[var(--color-bg-surface)] text-[var(--color-text-secondary)]
@@ -157,142 +172,256 @@ interface Product {
           <option value="low_stock">Low Stock (≤10)</option>
           <option value="out_of_stock">Out of Stock</option>
         </select>
-        @if (searchQuery || categoryFilter || statusFilter || stockFilter) {
+
+        <!-- Sort -->
+        <select [(ngModel)]="sortBy"
+          class="px-3 py-2 text-sm rounded-[var(--radius)] border border-[var(--color-border)]
+                 bg-[var(--color-bg-surface)] text-[var(--color-text-secondary)]
+                 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-500)]/20 focus:border-[var(--color-primary-500)]">
+          <option value="name">Name A–Z</option>
+          <option value="price_asc">Price Low–High</option>
+          <option value="price_desc">Price High–Low</option>
+          <option value="stock_desc">Most Stock</option>
+          <option value="stock_asc">Least Stock</option>
+        </select>
+
+        @if (searchQuery || categoryFilter || stockFilter) {
           <ui-button variant="ghost" size="sm" (click)="clearFilters()">Clear filters</ui-button>
         }
-        <div class="ml-auto text-sm text-[var(--color-text-muted)]">{{ filteredProducts().length }} products</div>
+
+        <div class="ml-auto flex items-center gap-3">
+          <span class="text-sm text-[var(--color-text-muted)]">{{ filteredProducts().length }} products</span>
+
+          <!-- View toggle -->
+          <div class="flex items-center gap-1 border border-[var(--color-border)] rounded-[var(--radius)] p-1">
+            <button (click)="viewMode.set('table')"
+              class="p-1.5 rounded-[var(--radius-sm)] transition-colors"
+              [class.bg-[var(--color-primary-100)]]="viewMode() === 'table'"
+              [class.dark:bg-[var(--color-primary-900)]/20]="viewMode() === 'table'"
+              [class.text-[var(--color-primary-600)]]="viewMode() === 'table'"
+              [class.text-[var(--color-text-muted)]]="viewMode() !== 'table'"
+              title="Table view">
+              <svg lucideList [size]="14" color="currentColor" />
+            </button>
+            <button (click)="viewMode.set('grid')"
+              class="p-1.5 rounded-[var(--radius-sm)] transition-colors"
+              [class.bg-[var(--color-primary-100)]]="viewMode() === 'grid'"
+              [class.dark:bg-[var(--color-primary-900)]/20]="viewMode() === 'grid'"
+              [class.text-[var(--color-primary-600)]]="viewMode() === 'grid'"
+              [class.text-[var(--color-text-muted)]]="viewMode() !== 'grid'"
+              title="Grid view">
+              <svg lucideGrid2x2 [size]="14" color="currentColor" />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Table -->
-    <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] overflow-hidden">
-      @if (loading()) {
-        <div class="p-4 space-y-1">
-          @for (i of [1,2,3,4,5,6]; track i) { <ui-skeleton type="row" /> }
-        </div>
-      } @else if (pagedProducts().length === 0) {
-        <ui-empty-state title="No products found" description="Try adjusting your search or filters" actionLabel="Clear filters" (action)="clearFilters()" />
-      } @else {
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-[var(--color-neutral-50)] dark:bg-[var(--color-bg-elevated)]">
-              <tr>
-                <th class="w-10 px-4 py-3">
-                  <input type="checkbox" class="rounded border-[var(--color-border)] accent-[var(--color-primary-600)]"
-                         [checked]="allSelected()" (change)="toggleAll($event)" />
-                </th>
-                <th class="text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">Product</th>
-                <th class="text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">SKU</th>
-                <th class="text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">Category</th>
-                <th class="text-right text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">Price</th>
-                <th class="text-right text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">Stock</th>
-                <th class="text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">Status</th>
-                <th class="px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-[var(--color-border)]">
-              @for (product of pagedProducts(); track product.id) {
-                <tr class="hover:bg-[var(--color-neutral-50)] dark:hover:bg-[var(--color-bg-elevated)] transition-colors group"
-                    [class.bg-[var(--color-primary-50)]]="selectedIds().has(product.id)"
-                    [class.dark:bg-[var(--color-primary-900)]/10]="selectedIds().has(product.id)">
-                  <td class="px-4 py-3">
+    @if (loading()) {
+      <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-4 space-y-1">
+        @for (i of [1,2,3,4,5,6]; track i) { <ui-skeleton type="row" /> }
+      </div>
+    } @else if (pagedProducts().length === 0) {
+      <ui-empty-state title="No products found" description="Try adjusting your search or filters" actionLabel="Clear filters" (action)="clearFilters()" />
+    } @else {
+
+      <!-- ── Table View ─────────────────────────────────────────────── -->
+      @if (viewMode() === 'table') {
+        <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-[var(--color-neutral-50)] dark:bg-[var(--color-bg-elevated)]">
+                <tr>
+                  <th class="w-10 px-4 py-3">
                     <input type="checkbox" class="rounded border-[var(--color-border)] accent-[var(--color-primary-600)]"
-                           [checked]="selectedIds().has(product.id)"
-                           (change)="toggleSelect(product.id, $event)" />
-                  </td>
-                  <td class="px-4 py-3">
-                    <div class="flex items-center gap-3">
-                      <div class="w-10 h-10 rounded-[var(--radius)] bg-[var(--color-neutral-100)] dark:bg-[var(--color-bg-elevated)]
-                                  flex items-center justify-center text-[var(--color-text-muted)] shrink-0 overflow-hidden">
-                        <svg lucidePackage [size]="18" color="currentColor" />
+                           [checked]="allSelected()" (change)="toggleAll($event)" />
+                  </th>
+                  <th class="text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">Product</th>
+                  <th class="text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">SKU</th>
+                  <th class="text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">Category</th>
+                  <th class="text-right text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">Price</th>
+                  <th class="text-right text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">Stock</th>
+                  <th class="text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">Status</th>
+                  <th class="px-4 py-3 w-12"></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[var(--color-border)]">
+                @for (product of pagedProducts(); track product.id) {
+                  <tr class="hover:bg-[var(--color-neutral-50)] dark:hover:bg-[var(--color-bg-elevated)] transition-colors"
+                      [class.bg-[var(--color-primary-50)]]="selectedIds().has(product.id)"
+                      [class.dark:bg-[var(--color-primary-900)]/10]="selectedIds().has(product.id)">
+                    <td class="px-4 py-3">
+                      <input type="checkbox" class="rounded border-[var(--color-border)] accent-[var(--color-primary-600)]"
+                             [checked]="selectedIds().has(product.id)"
+                             (change)="toggleSelect(product.id, $event)" />
+                    </td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-[var(--radius)] bg-[var(--color-neutral-100)] dark:bg-[var(--color-bg-elevated)]
+                                    flex items-center justify-center text-[var(--color-text-muted)] shrink-0">
+                          <svg lucidePackage [size]="18" color="currentColor" />
+                        </div>
+                        <div>
+                          <div class="text-sm font-medium text-[var(--color-text-primary)]">{{ product.name }}</div>
+                          <div class="text-xs text-[var(--color-text-muted)]">{{ product.sales | number }} sold · {{ product.revenue | currency }}</div>
+                        </div>
                       </div>
-                      <div>
-                        <div class="text-sm font-medium text-[var(--color-text-primary)]">{{ product.name }}</div>
-                        <div class="text-xs text-[var(--color-text-muted)]">{{ product.sales | number }} sold · {{ product.revenue | currency }}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-4 py-3 text-sm font-mono text-[var(--color-text-muted)]">{{ product.sku }}</td>
-                  <td class="px-4 py-3 text-sm text-[var(--color-text-secondary)]">{{ product.category }}</td>
-                  <td class="px-4 py-3 text-right">
-                    <div class="text-sm font-semibold text-[var(--color-text-primary)]">{{ product.price | currency }}</div>
+                    </td>
+                    <td class="px-4 py-3 text-sm font-mono text-[var(--color-text-muted)]">{{ product.sku }}</td>
+                    <td class="px-4 py-3 text-sm text-[var(--color-text-secondary)]">{{ product.category }}</td>
+                    <td class="px-4 py-3 text-right">
+                      <div class="text-sm font-semibold text-[var(--color-text-primary)]">{{ product.price | currency }}</div>
+                      @if (product.comparePrice) {
+                        <div class="text-xs text-[var(--color-text-muted)] line-through">{{ product.comparePrice | currency }}</div>
+                      }
+                    </td>
+                    <td class="px-4 py-3 text-right">
+                      <span [class]="stockClass(product.stock)" class="text-sm font-medium">{{ product.stock }}</span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <ui-badge [variant]="statusVariant(product.status)" size="sm" [dot]="true">
+                        {{ product.status | titlecase }}
+                      </ui-badge>
+                    </td>
+                    <!-- Always-visible action dropdown -->
+                    <td class="px-4 py-3 text-right">
+                      <ui-dropdown placement="bottom-end" minWidth="188px">
+                        <button trigger type="button"
+                          class="p-1.5 rounded-[var(--radius-sm)] text-[var(--color-text-muted)]
+                                 hover:text-[var(--color-text-primary)] hover:bg-[var(--color-neutral-100)]
+                                 dark:hover:bg-[var(--color-bg-elevated)] transition-colors">
+                          <svg lucideMoreVertical [size]="14" color="currentColor" />
+                        </button>
+                        <ui-dropdown-item (click)="editProduct(product)">
+                          <svg lucideEdit2 [size]="14" color="currentColor" />
+                          Edit
+                        </ui-dropdown-item>
+                        <ui-dropdown-item (click)="viewProduct(product)">
+                          <svg lucideEye [size]="14" color="currentColor" />
+                          View Details
+                        </ui-dropdown-item>
+                        <ui-dropdown-item (click)="duplicateProduct(product)">
+                          <svg lucideCopy [size]="14" color="currentColor" />
+                          Duplicate
+                        </ui-dropdown-item>
+                        <ui-dropdown-separator />
+                        <ui-dropdown-item (click)="archiveProduct(product)" [disabled]="product.status === 'archived'">
+                          <svg lucideArchive [size]="14" color="currentColor" />
+                          Archive
+                        </ui-dropdown-item>
+                        <ui-dropdown-separator />
+                        <ui-dropdown-item [danger]="true" (click)="deleteProduct(product)">
+                          <svg lucideTrash2 [size]="14" color="currentColor" />
+                          Delete
+                        </ui-dropdown-item>
+                      </ui-dropdown>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Bulk actions bar -->
+          @if (selectedIds().size > 0) {
+            <div class="px-6 py-3 bg-[var(--color-primary-50)] dark:bg-[var(--color-primary-900)]/10 border-t border-[var(--color-border)]
+                        flex items-center gap-3">
+              <span class="text-sm font-medium text-[var(--color-primary-700)] dark:text-[var(--color-primary-400)]">
+                {{ selectedIds().size }} selected
+              </span>
+              <ui-button variant="outline" size="sm" (click)="bulkStatusChange('active')">Set Active</ui-button>
+              <ui-button variant="outline" size="sm" (click)="bulkStatusChange('archived')">Archive</ui-button>
+              <ui-button variant="ghost" size="sm" (click)="clearSelection()">Clear</ui-button>
+            </div>
+          }
+
+          <div class="px-6 py-4 border-t border-[var(--color-border)]">
+            <ui-pagination [page]="currentPage()" [pageSize]="pageSize" [total]="filteredProducts().length" (pageChange)="currentPage.set($event)" />
+          </div>
+        </div>
+      }
+
+      <!-- ── Grid View ──────────────────────────────────────────────── -->
+      @if (viewMode() === 'grid') {
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          @for (product of pagedProducts(); track product.id) {
+            <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)]
+                        hover:shadow-[var(--shadow-elevated)] transition-shadow relative">
+              <!-- Product image placeholder -->
+              <div class="h-40 bg-[var(--color-neutral-50)] dark:bg-[var(--color-bg-elevated)] rounded-t-[var(--radius-lg)]
+                          flex items-center justify-center">
+                <svg lucidePackage [size]="40" color="currentColor" class="text-[var(--color-text-muted)] opacity-30" />
+              </div>
+
+              <!-- Always-visible action dropdown (top-right) -->
+              <div class="absolute top-2.5 right-2.5">
+                <ui-dropdown placement="bottom-end" minWidth="188px">
+                  <button trigger type="button"
+                    class="w-7 h-7 flex items-center justify-center rounded-[var(--radius-sm)]
+                           bg-white/80 dark:bg-[var(--color-bg-surface)]/80 border border-[var(--color-border)]
+                           text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors shadow-sm">
+                    <svg lucideMoreVertical [size]="13" color="currentColor" />
+                  </button>
+                  <ui-dropdown-item (click)="editProduct(product)">
+                    <svg lucideEdit2 [size]="14" color="currentColor" />
+                    Edit
+                  </ui-dropdown-item>
+                  <ui-dropdown-item (click)="viewProduct(product)">
+                    <svg lucideEye [size]="14" color="currentColor" />
+                    View Details
+                  </ui-dropdown-item>
+                  <ui-dropdown-item (click)="duplicateProduct(product)">
+                    <svg lucideCopy [size]="14" color="currentColor" />
+                    Duplicate
+                  </ui-dropdown-item>
+                  <ui-dropdown-separator />
+                  <ui-dropdown-item (click)="archiveProduct(product)" [disabled]="product.status === 'archived'">
+                    <svg lucideArchive [size]="14" color="currentColor" />
+                    Archive
+                  </ui-dropdown-item>
+                  <ui-dropdown-separator />
+                  <ui-dropdown-item [danger]="true" (click)="deleteProduct(product)">
+                    <svg lucideTrash2 [size]="14" color="currentColor" />
+                    Delete
+                  </ui-dropdown-item>
+                </ui-dropdown>
+              </div>
+
+              <!-- Card body -->
+              <div class="p-4">
+                <div class="mb-2">
+                  <div class="text-sm font-semibold text-[var(--color-text-primary)] line-clamp-1">{{ product.name }}</div>
+                  <div class="text-xs text-[var(--color-text-muted)] font-mono">{{ product.sku }}</div>
+                </div>
+                <div class="text-xs text-[var(--color-text-muted)] mb-3">{{ product.category }}</div>
+
+                <div class="flex items-center justify-between mb-3">
+                  <div>
+                    <div class="text-base font-bold text-[var(--color-text-primary)]">{{ product.price | currency }}</div>
                     @if (product.comparePrice) {
                       <div class="text-xs text-[var(--color-text-muted)] line-through">{{ product.comparePrice | currency }}</div>
                     }
-                  </td>
-                  <td class="px-4 py-3 text-right">
-                    <span [class]="stockClass(product.stock)" class="text-sm font-medium">{{ product.stock }}</span>
-                  </td>
-                  <td class="px-4 py-3">
-                    <ui-badge [variant]="statusVariant(product.status)" size="sm" [dot]="true">
-                      {{ product.status | titlecase }}
-                    </ui-badge>
-                  </td>
-                  <td class="px-4 py-3 text-right">
-                    <ui-dropdown placement="bottom-end" minWidth="188px">
+                  </div>
+                  <ui-badge [variant]="statusVariant(product.status)" size="sm" [dot]="true">
+                    {{ product.status | titlecase }}
+                  </ui-badge>
+                </div>
 
-                      <!-- Trigger: three-dot button, visible on row hover -->
-                      <button trigger type="button"
-                        class="p-1.5 rounded-[var(--radius-sm)] text-[var(--color-text-muted)]
-                               hover:text-[var(--color-text-primary)] hover:bg-[var(--color-neutral-100)]
-                               dark:hover:bg-[var(--color-bg-elevated)] transition-colors
-                               opacity-0 group-hover:opacity-100">
-                        <svg lucideMoreVertical [size]="14" color="currentColor" />
-                      </button>
-
-                      <ui-dropdown-item (click)="editProduct(product)">
-                        <svg lucideEdit2 [size]="14" color="currentColor" />
-                        Edit
-                      </ui-dropdown-item>
-                      <ui-dropdown-item (click)="viewProduct(product)">
-                        <svg lucideEye [size]="14" color="currentColor" />
-                        View Details
-                      </ui-dropdown-item>
-                      <ui-dropdown-item (click)="duplicateProduct(product)">
-                        <svg lucideCopy [size]="14" color="currentColor" />
-                        Duplicate
-                      </ui-dropdown-item>
-
-                      <ui-dropdown-separator />
-
-                      <ui-dropdown-item (click)="archiveProduct(product)" [disabled]="product.status === 'archived'">
-                        <svg lucideArchive [size]="14" color="currentColor" />
-                        Archive
-                      </ui-dropdown-item>
-
-                      <ui-dropdown-separator />
-
-                      <ui-dropdown-item [danger]="true" (click)="deleteProduct(product)">
-                        <svg lucideTrash2 [size]="14" color="currentColor" />
-                        Delete
-                      </ui-dropdown-item>
-
-                    </ui-dropdown>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
+                <div class="flex items-center justify-between text-xs text-[var(--color-text-muted)]">
+                  <span>Stock: <span [class]="stockClass(product.stock)" class="font-semibold">{{ product.stock }}</span></span>
+                  <span>{{ product.sales }} sold</span>
+                </div>
+              </div>
+            </div>
+          }
         </div>
 
-        <!-- Bulk actions bar -->
-        @if (selectedIds().size > 0) {
-          <div class="px-6 py-3 bg-[var(--color-primary-50)] dark:bg-[var(--color-primary-900)]/10 border-t border-[var(--color-border)]
-                      flex items-center gap-3">
-            <span class="text-sm font-medium text-[var(--color-primary-700)] dark:text-[var(--color-primary-400)]">
-              {{ selectedIds().size }} selected
-            </span>
-            <ui-button variant="outline" size="sm" (click)="bulkStatusChange('active')">Set Active</ui-button>
-            <ui-button variant="outline" size="sm" (click)="bulkStatusChange('archived')">Archive</ui-button>
-            <ui-button variant="ghost" size="sm" (click)="clearSelection()">Clear</ui-button>
-          </div>
-        }
-
-        <div class="px-6 py-4 border-t border-[var(--color-border)]">
+        <!-- Grid pagination -->
+        <div class="mt-6 pt-4 border-t border-[var(--color-border)]">
           <ui-pagination [page]="currentPage()" [pageSize]="pageSize" [total]="filteredProducts().length" (pageChange)="currentPage.set($event)" />
         </div>
       }
-    </div>
+    }
 
     <!-- Delete confirm modal -->
     @if (deleteTarget()) {
@@ -317,12 +446,23 @@ export class ProductsComponent implements OnInit {
   loading = signal(true);
   currentPage = signal(1);
   pageSize = 10;
+
   searchQuery = '';
   categoryFilter = '';
-  statusFilter = '';
   stockFilter = '';
+  sortBy = 'name';
+
+  statusTab = signal<StatusTab>('all');
+  viewMode = signal<ViewMode>('table');
   selectedIds = signal<Set<number>>(new Set());
   deleteTarget = signal<Product | null>(null);
+
+  statusTabs = [
+    { label: 'All', value: 'all' as StatusTab },
+    { label: 'Active', value: 'active' as StatusTab },
+    { label: 'Draft', value: 'draft' as StatusTab },
+    { label: 'Archived', value: 'archived' as StatusTab },
+  ];
 
   categories = ['Electronics', 'Clothing', 'Home & Garden', 'Sports', 'Books', 'Software'];
 
@@ -346,16 +486,28 @@ export class ProductsComponent implements OnInit {
 
   filteredProducts = computed(() => {
     const q = this.searchQuery.toLowerCase();
-    return this.allProducts().filter(p =>
+    const tab = this.statusTab();
+    let items = this.allProducts().filter(p =>
       (!q || p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q)) &&
       (!this.categoryFilter || p.category === this.categoryFilter) &&
-      (!this.statusFilter || p.status === this.statusFilter) &&
+      (tab === 'all' || p.status === tab) &&
       (!this.stockFilter ||
         (this.stockFilter === 'in_stock' && p.stock > 10) ||
         (this.stockFilter === 'low_stock' && p.stock > 0 && p.stock <= 10) ||
         (this.stockFilter === 'out_of_stock' && p.stock === 0)
       )
     );
+
+    // Sort
+    return [...items].sort((a, b) => {
+      switch (this.sortBy) {
+        case 'price_asc': return a.price - b.price;
+        case 'price_desc': return b.price - a.price;
+        case 'stock_desc': return b.stock - a.stock;
+        case 'stock_asc': return a.stock - b.stock;
+        default: return a.name.localeCompare(b.name);
+      }
+    });
   });
 
   pagedProducts = computed(() => {
@@ -367,6 +519,10 @@ export class ProductsComponent implements OnInit {
   lowStockCount = computed(() => this.allProducts().filter(p => p.stock > 0 && p.stock <= 10).length);
   outOfStockCount = computed(() => this.allProducts().filter(p => p.stock === 0).length);
   allSelected = computed(() => this.pagedProducts().length > 0 && this.pagedProducts().every(p => this.selectedIds().has(p.id)));
+
+  tabCount(tab: StatusTab): number {
+    return tab === 'all' ? this.allProducts().length : this.allProducts().filter(p => p.status === tab).length;
+  }
 
   ngOnInit() {
     this.layout.setPage('Products', [{ label: 'Management' }, { label: 'Products' }]);
@@ -383,39 +539,29 @@ export class ProductsComponent implements OnInit {
     return 'text-[var(--color-text-primary)]';
   }
 
-  clearFilters() { this.searchQuery = ''; this.categoryFilter = ''; this.statusFilter = ''; this.stockFilter = ''; this.currentPage.set(1); }
+  setStatusTab(tab: StatusTab) { this.statusTab.set(tab); this.currentPage.set(1); }
+  clearFilters() { this.searchQuery = ''; this.categoryFilter = ''; this.stockFilter = ''; this.sortBy = 'name'; this.setStatusTab('all'); }
 
   toggleAll(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
-    if (checked) {
-      this.selectedIds.set(new Set(this.pagedProducts().map(p => p.id)));
-    } else {
-      this.clearSelection();
-    }
+    this.selectedIds.set(checked ? new Set(this.pagedProducts().map(p => p.id)) : new Set());
   }
 
   toggleSelect(id: number, event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
-    this.selectedIds.update(set => {
-      const next = new Set(set);
-      checked ? next.add(id) : next.delete(id);
-      return next;
-    });
+    this.selectedIds.update(set => { const next = new Set(set); checked ? next.add(id) : next.delete(id); return next; });
   }
 
   clearSelection() { this.selectedIds.set(new Set()); }
 
   bulkStatusChange(status: 'active' | 'archived') {
     const count = this.selectedIds().size;
-    this.allProducts.update(products =>
-      products.map(p => this.selectedIds().has(p.id) ? { ...p, status } : p)
-    );
+    this.allProducts.update(products => products.map(p => this.selectedIds().has(p.id) ? { ...p, status } : p));
     this.clearSelection();
     this.toast.success('Products updated', `${count} products set to ${status}.`);
   }
 
   editProduct(product: Product) { this.router.navigate(['/products', product.id]); }
-
   viewProduct(product: Product) { this.toast.info('View product', `Opening details for ${product.name}.`); }
 
   duplicateProduct(product: Product) {

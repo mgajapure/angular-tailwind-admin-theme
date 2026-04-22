@@ -5,9 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import {
   LucideUpload, LucideSearch, LucideGrid2x2, LucideList, LucideTrash2,
-  LucideDownload, LucideCopy, LucideEye, LucideHardDrive, LucideCheck, LucideX,
+  LucideDownload, LucideCopy, LucideEye, LucideHardDrive, LucideCheck,
   LucideImage, LucideFilm, LucideFileText, LucideMusic, LucideArchive,
-  LucideDynamicIcon, provideLucideIcons,
+  LucideMoreVertical, LucideDynamicIcon, provideLucideIcons,
 } from '@lucide/angular';
 import { LayoutService } from '../../core/services/layout.service';
 import { ToastService } from '../../core/services/toast.service';
@@ -15,6 +15,10 @@ import { ButtonComponent } from '../../shared/components/button/button.component
 import { BadgeComponent } from '../../shared/components/badge/badge.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { ModalComponent } from '../../shared/components/modal/modal.component';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
+import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
+import { DropdownItemComponent } from '../../shared/components/dropdown/dropdown-item.component';
+import { DropdownSeparatorComponent } from '../../shared/components/dropdown/dropdown-separator.component';
 
 type MediaType = 'all' | 'image' | 'video' | 'document' | 'audio' | 'archive';
 type ViewMode = 'grid' | 'list';
@@ -40,10 +44,11 @@ interface MediaFile {
   ],
   imports: [
     FormsModule, DecimalPipe,
-    ButtonComponent, BadgeComponent, EmptyStateComponent, ModalComponent,
+    ButtonComponent, BadgeComponent, EmptyStateComponent, ModalComponent, PaginationComponent,
+    DropdownComponent, DropdownItemComponent, DropdownSeparatorComponent,
     LucideUpload, LucideSearch, LucideGrid2x2, LucideList, LucideTrash2,
-    LucideDownload, LucideCopy, LucideEye, LucideHardDrive, LucideCheck, LucideX,
-    LucideDynamicIcon,
+    LucideDownload, LucideCopy, LucideEye, LucideHardDrive, LucideCheck,
+    LucideMoreVertical, LucideDynamicIcon,
   ],
   template: `
     <!-- Header -->
@@ -83,25 +88,28 @@ interface MediaFile {
       </div>
     </div>
 
-    <!-- Filters & view toggle -->
+    <!-- Filter Card -->
     <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-4 mb-5">
+
+      <!-- Type filter tabs (pill style) -->
+      <div class="flex items-center gap-1 bg-[var(--color-neutral-100)] dark:bg-[var(--color-bg-elevated)] rounded-[var(--radius)] p-1 mb-3">
+        @for (tab of typeTabs; track tab.value) {
+          <button (click)="typeFilter.set(tab.value)"
+            class="px-3 py-1 text-xs font-medium rounded-[var(--radius-sm)] transition-colors"
+            [class.bg-white]="typeFilter() === tab.value"
+            [class.dark:bg-[var(--color-bg-surface)]]="typeFilter() === tab.value"
+            [class.shadow-[var(--shadow-card)]]="typeFilter() === tab.value"
+            [class.text-[var(--color-text-primary)]]="typeFilter() === tab.value"
+            [class.text-[var(--color-text-muted)]]="typeFilter() !== tab.value"
+            [class.hover:text-[var(--color-text-primary)]]="typeFilter() !== tab.value">
+            {{ tab.label }}
+            <span class="ml-1 text-[10px] text-[var(--color-text-muted)]">{{ typeCount(tab.value) }}</span>
+          </button>
+        }
+      </div>
+
+      <!-- Search, Sort & View Toggle -->
       <div class="flex flex-wrap items-center gap-3">
-        <!-- Type filter tabs -->
-        <div class="flex items-center gap-1 bg-[var(--color-neutral-100)] dark:bg-[var(--color-bg-elevated)] rounded-[var(--radius)] p-1">
-          @for (tab of typeTabs; track tab.value) {
-            <button (click)="typeFilter.set(tab.value)"
-              class="px-3 py-1 text-xs font-medium rounded-[var(--radius-sm)] transition-colors"
-              [class.bg-white]="typeFilter() === tab.value"
-              [class.dark:bg-[var(--color-bg-surface)]]="typeFilter() === tab.value"
-              [class.shadow-[var(--shadow-card)]]="typeFilter() === tab.value"
-              [class.text-[var(--color-text-primary)]]="typeFilter() === tab.value"
-              [class.text-[var(--color-text-muted)]]="typeFilter() !== tab.value"
-              [class.hover:text-[var(--color-text-primary)]]="typeFilter() !== tab.value">
-              {{ tab.label }}
-              <span class="ml-1 text-[10px] text-[var(--color-text-muted)]">{{ typeCount(tab.value) }}</span>
-            </button>
-          }
-        </div>
 
         <!-- Search -->
         <div class="relative flex-1 min-w-48">
@@ -123,24 +131,31 @@ interface MediaFile {
           <option value="size_desc">Largest first</option>
         </select>
 
-        <!-- View toggle -->
-        <div class="flex items-center gap-1 border border-[var(--color-border)] rounded-[var(--radius)] p-1">
-          <button (click)="viewMode.set('grid')"
-            class="p-1.5 rounded-[var(--radius-sm)] transition-colors"
-            [class.bg-[var(--color-primary-100)]]="viewMode() === 'grid'"
-            [class.dark:bg-[var(--color-primary-900)]/20]="viewMode() === 'grid'"
-            [class.text-[var(--color-primary-600)]]="viewMode() === 'grid'"
-            [class.text-[var(--color-text-muted)]]="viewMode() !== 'grid'">
-            <svg lucideGrid2x2 [size]="14" color="currentColor" />
-          </button>
-          <button (click)="viewMode.set('list')"
-            class="p-1.5 rounded-[var(--radius-sm)] transition-colors"
-            [class.bg-[var(--color-primary-100)]]="viewMode() === 'list'"
-            [class.dark:bg-[var(--color-primary-900)]/20]="viewMode() === 'list'"
-            [class.text-[var(--color-primary-600)]]="viewMode() === 'list'"
-            [class.text-[var(--color-text-muted)]]="viewMode() !== 'list'">
-            <svg lucideList [size]="14" color="currentColor" />
-          </button>
+        <div class="ml-auto flex items-center gap-3">
+          <!-- File count -->
+          <span class="text-sm text-[var(--color-text-muted)]">{{ filteredFiles().length }} files</span>
+
+          <!-- View toggle -->
+          <div class="flex items-center gap-1 border border-[var(--color-border)] rounded-[var(--radius)] p-1">
+            <button (click)="viewMode.set('grid')"
+              class="p-1.5 rounded-[var(--radius-sm)] transition-colors"
+              [class.bg-[var(--color-primary-100)]]="viewMode() === 'grid'"
+              [class.dark:bg-[var(--color-primary-900)]/20]="viewMode() === 'grid'"
+              [class.text-[var(--color-primary-600)]]="viewMode() === 'grid'"
+              [class.text-[var(--color-text-muted)]]="viewMode() !== 'grid'"
+              title="Grid view">
+              <svg lucideGrid2x2 [size]="14" color="currentColor" />
+            </button>
+            <button (click)="viewMode.set('list')"
+              class="p-1.5 rounded-[var(--radius-sm)] transition-colors"
+              [class.bg-[var(--color-primary-100)]]="viewMode() === 'list'"
+              [class.dark:bg-[var(--color-primary-900)]/20]="viewMode() === 'list'"
+              [class.text-[var(--color-primary-600)]]="viewMode() === 'list'"
+              [class.text-[var(--color-text-muted)]]="viewMode() !== 'list'"
+              title="List view">
+              <svg lucideList [size]="14" color="currentColor" />
+            </button>
+          </div>
         </div>
 
         @if (selectedIds().size > 0) {
@@ -155,54 +170,69 @@ interface MediaFile {
               Delete
             </ui-button>
             <ui-button variant="ghost" size="xs" (click)="resetSelectedIds()">
-              <svg lucideX [size]="10" color="currentColor" />
+              <svg [size]="10" class="text-[var(--color-text-muted)]" lucideCheck color="currentColor" />
             </ui-button>
           </div>
         }
       </div>
     </div>
 
-    <!-- Drop zone highlight (when empty) -->
     @if (filteredFiles().length === 0) {
       <ui-empty-state title="No files found" description="Upload files or adjust your search" actionLabel="Upload Files" (action)="triggerUpload()" />
     } @else {
 
-      <!-- Grid View -->
+      <!-- ── Grid View ──────────────────────────────────────────────── -->
       @if (viewMode() === 'grid') {
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
-          @for (file of filteredFiles(); track file.id) {
-            <div class="group relative bg-[var(--color-bg-surface)] border rounded-[var(--radius-lg)] overflow-hidden cursor-pointer transition-all"
+          @for (file of pagedFiles(); track file.id) {
+            <div class="relative bg-[var(--color-bg-surface)] border rounded-[var(--radius-lg)] overflow-hidden transition-all cursor-pointer"
                  [class.border-[var(--color-primary-400)]]="selectedIds().has(file.id)"
                  [class.shadow-[0_0_0_2px_var(--color-primary-200)]]="selectedIds().has(file.id)"
                  [class.border-[var(--color-border)]]="!selectedIds().has(file.id)"
                  [class.hover:border-[var(--color-primary-300)]]="!selectedIds().has(file.id)"
                  (click)="toggleFileSelect(file.id)">
+
               <!-- Preview area -->
               <div class="aspect-square flex items-center justify-center" [class]="filePreviewBg(file.type)">
                 <svg [lucideIcon]="fileIcon(file.type)" [size]="32" color="currentColor" [class]="fileIconColor(file.type)" />
               </div>
-              <!-- Selection check -->
+
+              <!-- Selection indicator -->
               @if (selectedIds().has(file.id)) {
-                <div class="absolute top-2 left-2 w-5 h-5 rounded-full bg-[var(--color-primary-600)] flex items-center justify-center">
+                <div class="absolute top-2 left-2 w-5 h-5 rounded-full bg-[var(--color-primary-600)] flex items-center justify-center z-10"
+                     (click)="$event.stopPropagation()">
                   <svg lucideCheck [size]="10" color="currentColor" class="text-white" />
                 </div>
               }
-              <!-- Hover overlay -->
-              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1"
-                   (click)="$event.stopPropagation()">
-                <button class="p-1.5 bg-white/90 rounded-[var(--radius-sm)] hover:bg-white transition-colors"
-                        (click)="viewFile(file)" title="Preview">
-                  <svg lucideEye [size]="12" color="currentColor" class="text-gray-800" />
-                </button>
-                <button class="p-1.5 bg-white/90 rounded-[var(--radius-sm)] hover:bg-white transition-colors"
-                        (click)="copyUrl(file)" title="Copy URL">
-                  <svg lucideCopy [size]="12" color="currentColor" class="text-gray-800" />
-                </button>
-                <button class="p-1.5 bg-white/90 rounded-[var(--radius-sm)] hover:bg-white transition-colors"
-                        (click)="deleteFile(file)" title="Delete">
-                  <svg lucideTrash2 [size]="12" color="currentColor" class="text-red-500" />
-                </button>
+
+              <!-- Always-visible action dropdown (top-right) -->
+              <div class="absolute top-1.5 right-1.5 z-10" (click)="$event.stopPropagation()">
+                <ui-dropdown placement="bottom-end" minWidth="160px">
+                  <button trigger type="button"
+                    class="w-7 h-7 flex items-center justify-center rounded-[var(--radius-sm)]
+                           bg-black/25 hover:bg-black/50 text-white transition-colors backdrop-blur-sm">
+                    <svg lucideMoreVertical [size]="12" color="currentColor" />
+                  </button>
+                  <ui-dropdown-item (click)="viewFile(file)">
+                    <svg lucideEye [size]="14" color="currentColor" />
+                    Preview
+                  </ui-dropdown-item>
+                  <ui-dropdown-item (click)="copyUrl(file)">
+                    <svg lucideCopy [size]="14" color="currentColor" />
+                    Copy URL
+                  </ui-dropdown-item>
+                  <ui-dropdown-item (click)="downloadFile(file)">
+                    <svg lucideDownload [size]="14" color="currentColor" />
+                    Download
+                  </ui-dropdown-item>
+                  <ui-dropdown-separator />
+                  <ui-dropdown-item [danger]="true" (click)="deleteFile(file)">
+                    <svg lucideTrash2 [size]="14" color="currentColor" />
+                    Delete
+                  </ui-dropdown-item>
+                </ui-dropdown>
               </div>
+
               <!-- Info -->
               <div class="p-2 border-t border-[var(--color-border)]">
                 <div class="text-xs font-medium text-[var(--color-text-primary)] truncate" [title]="file.name">{{ file.name }}</div>
@@ -211,9 +241,16 @@ interface MediaFile {
             </div>
           }
         </div>
+
+        <!-- Grid pagination -->
+        @if (filteredFiles().length > pageSize) {
+          <div class="mt-4 pt-4 border-t border-[var(--color-border)]">
+            <ui-pagination [page]="currentPage()" [pageSize]="pageSize" [total]="filteredFiles().length" (pageChange)="currentPage.set($event)" />
+          </div>
+        }
       }
 
-      <!-- List View -->
+      <!-- ── List View ──────────────────────────────────────────────── -->
       @if (viewMode() === 'list') {
         <div class="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] overflow-hidden">
           <table class="w-full">
@@ -228,12 +265,12 @@ interface MediaFile {
                 <th class="text-right text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">Size</th>
                 <th class="text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">Uploaded By</th>
                 <th class="text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">Date</th>
-                <th class="px-4 py-3"></th>
+                <th class="px-4 py-3 w-12"></th>
               </tr>
             </thead>
             <tbody class="divide-y divide-[var(--color-border)]">
-              @for (file of filteredFiles(); track file.id) {
-                <tr class="hover:bg-[var(--color-neutral-50)] dark:hover:bg-[var(--color-bg-elevated)] transition-colors group">
+              @for (file of pagedFiles(); track file.id) {
+                <tr class="hover:bg-[var(--color-neutral-50)] dark:hover:bg-[var(--color-bg-elevated)] transition-colors">
                   <td class="px-4 py-3">
                     <input type="checkbox" class="rounded border-[var(--color-border)] accent-[var(--color-primary-600)]"
                            [checked]="selectedIds().has(file.id)"
@@ -258,26 +295,42 @@ interface MediaFile {
                   <td class="px-4 py-3 text-right text-sm text-[var(--color-text-muted)]">{{ formatSize(file.size) }}</td>
                   <td class="px-4 py-3 text-sm text-[var(--color-text-secondary)]">{{ file.uploadedBy }}</td>
                   <td class="px-4 py-3 text-sm text-[var(--color-text-muted)]">{{ file.uploadedAt }}</td>
-                  <td class="px-4 py-3">
-                    <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <ui-button variant="ghost" size="xs" (click)="viewFile(file)">
-                        <svg lucideEye [size]="12" color="currentColor" />
-                      </ui-button>
-                      <ui-button variant="ghost" size="xs" (click)="copyUrl(file)">
-                        <svg lucideCopy [size]="12" color="currentColor" />
-                      </ui-button>
-                      <ui-button variant="ghost" size="xs" (click)="downloadFile(file)">
-                        <svg lucideDownload [size]="12" color="currentColor" />
-                      </ui-button>
-                      <ui-button variant="ghost" size="xs" (click)="deleteFile(file)">
-                        <svg lucideTrash2 [size]="12" color="currentColor" class="text-red-500" />
-                      </ui-button>
-                    </div>
+                  <!-- Always-visible action dropdown -->
+                  <td class="px-4 py-3 text-right">
+                    <ui-dropdown placement="bottom-end" minWidth="160px">
+                      <button trigger type="button"
+                        class="p-1.5 rounded-[var(--radius-sm)] text-[var(--color-text-muted)]
+                               hover:text-[var(--color-text-primary)] hover:bg-[var(--color-neutral-100)]
+                               dark:hover:bg-[var(--color-bg-elevated)] transition-colors">
+                        <svg lucideMoreVertical [size]="14" color="currentColor" />
+                      </button>
+                      <ui-dropdown-item (click)="viewFile(file)">
+                        <svg lucideEye [size]="14" color="currentColor" />
+                        Preview
+                      </ui-dropdown-item>
+                      <ui-dropdown-item (click)="copyUrl(file)">
+                        <svg lucideCopy [size]="14" color="currentColor" />
+                        Copy URL
+                      </ui-dropdown-item>
+                      <ui-dropdown-item (click)="downloadFile(file)">
+                        <svg lucideDownload [size]="14" color="currentColor" />
+                        Download
+                      </ui-dropdown-item>
+                      <ui-dropdown-separator />
+                      <ui-dropdown-item [danger]="true" (click)="deleteFile(file)">
+                        <svg lucideTrash2 [size]="14" color="currentColor" />
+                        Delete
+                      </ui-dropdown-item>
+                    </ui-dropdown>
                   </td>
                 </tr>
               }
             </tbody>
           </table>
+          <!-- List pagination -->
+          <div class="px-6 py-4 border-t border-[var(--color-border)]">
+            <ui-pagination [page]="currentPage()" [pageSize]="pageSize" [total]="filteredFiles().length" (pageChange)="currentPage.set($event)" />
+          </div>
         </div>
       }
     }
@@ -292,6 +345,8 @@ export class MediaComponent implements OnInit {
   searchQuery = '';
   sortBy = 'date_desc';
   selectedIds = signal<Set<number>>(new Set());
+  currentPage = signal(1);
+  pageSize = 24;
 
   storageBreakdown = [
     { label: 'Images', size: '2.1 GB', color: '#4f46e5' },
@@ -337,7 +392,14 @@ export class MediaComponent implements OnInit {
     );
   });
 
-  allSelected = computed(() => this.filteredFiles().length > 0 && this.filteredFiles().every(f => this.selectedIds().has(f.id)));
+  pagedFiles = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize;
+    return this.filteredFiles().slice(start, start + this.pageSize);
+  });
+
+  allSelected = computed(() =>
+    this.filteredFiles().length > 0 && this.filteredFiles().every(f => this.selectedIds().has(f.id))
+  );
 
   typeCount(type: MediaType): number {
     return type === 'all' ? this.allFiles().length : this.allFiles().filter(f => f.type === type).length;
@@ -384,11 +446,14 @@ export class MediaComponent implements OnInit {
   viewFile(f: MediaFile) { this.toast.info('Preview', `Opening preview for ${f.name}.`); }
   copyUrl(f: MediaFile) { this.toast.success('Copied!', `URL for ${f.name} copied to clipboard.`); }
   downloadFile(f: MediaFile) { this.toast.info('Download', `Downloading ${f.name}.`); }
+
   deleteFile(f: MediaFile) {
     this.allFiles.update(files => files.filter(x => x.id !== f.id));
     this.toast.success('Deleted', `${f.name} has been removed.`);
   }
+
   bulkDownload() { this.toast.info('Bulk download', `Downloading ${this.selectedIds().size} files as ZIP.`); }
+
   bulkDelete() {
     const count = this.selectedIds().size;
     this.allFiles.update(files => files.filter(f => !this.selectedIds().has(f.id)));
@@ -396,7 +461,5 @@ export class MediaComponent implements OnInit {
     this.toast.success('Files deleted', `${count} files have been removed.`);
   }
 
-  resetSelectedIds(){
-    this.selectedIds.set(new Set());
-  }
+  resetSelectedIds() { this.selectedIds.set(new Set()); }
 }
